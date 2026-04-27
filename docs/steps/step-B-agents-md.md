@@ -117,3 +117,33 @@ A 阶段的所有断言保持原样。
 - Windows 上 fallback 到 fs.cp，提示用户该目录会占额外磁盘。
 - AGENTS.md 体积要持续盯紧——后续若用户社区反馈太薄，再权衡是否提升上限（要先在源文档里写明）。
 - Codex 的 `instructions_file` 字段拼写在源计划 §10 已标记 ⚠️ 待核——B 阶段尚不写 TOML，把这个核实留到 C 阶段。
+
+
+## 实施完成记录：
+B 阶段已实施完成。
+
+主要改动：
+
+CLI 版本升级到 0.2.0
+模板新增 AGENTS.md 事实源：
+根：templates/default/AGENTS.md
+前端：templates/default/apps/web/AGENTS.md
+后端：templates/default/apps/api/AGENTS.md
+shared：templates/default/packages/shared/AGENTS.md
+CLAUDE.md 改成 pointer，root/web/api/shared 四处一致。
+scaffold 阶段动态创建：
+.claude/skills/
+.agents/skills -> ../.claude/skills
+.opencode/skills -> ../.claude/skills
+.codex/agents/.gitkeep
+模板新增 .gitattributes
+README 增加 AI 工具兼容说明
+scripts/verify-template.sh 增加 B 阶段断言
+验证已跑：
+
+pnpm typecheck 通过
+pnpm lint 通过
+pnpm build 通过
+本地 scaffold 到 /tmp/cf-b-smoke/app 通过
+已验证 AGENTS.md、四处 CLAUDE.md pointer、shared 指引、.agents/.opencode 软链、.codex/agents/.gitkeep、docs/openapi.json 都生成正确
+根 AGENTS.md 体积约 5689 bytes，低于 8KB

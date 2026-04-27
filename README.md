@@ -40,6 +40,20 @@ CAF_DEV_TMP=/tmp/my-caf-run pnpm dev:template
 - `apps/web`：Vite 8、React 19、Tailwind v4、shadcn/ui、TanStack Query。
 - `packages/shared`：共享 Zod schemas、推导类型、OpenAPI registry。
 
+## AI 工具兼容性
+
+生成项目使用 `AGENTS.md` 作为 AI 编码代理指引的单一事实源，并保留 `CLAUDE.md` pointer 兼容 Claude Code。
+
+原生或通过 fallback 支持：
+
+- Claude Code
+- Codex
+- OpenCode
+- Cursor
+- Windsurf
+
+生成时会动态创建 `.agents/skills` 和 `.opencode/skills`，指向同一份 `.claude/skills`，为后续项目级 skills 做兼容准备。
+
 ## 开发地址
 
 - 前端页面：`http://localhost:5173/items`
