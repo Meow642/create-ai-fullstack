@@ -1,0 +1,9 @@
+src
+docs
+scripts
+tsconfig.json
+tsup.config.ts
+eslint.config.mjs
+pnpm-lock.yaml
+node_modules
+.DS_Store
