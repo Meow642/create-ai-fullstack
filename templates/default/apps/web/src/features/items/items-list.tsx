@@ -39,7 +39,7 @@ export function ItemsListPage() {
       setDialogOpen(false);
       setEditingItem(undefined);
     } catch (error) {
-      toast.error(error instanceof ApiError ? error.message : 'Failed to save item');
+      toast.error(error instanceof ApiError ? error.message : '保存失败');
     }
   };
 
@@ -47,7 +47,7 @@ export function ItemsListPage() {
     try {
       await deleteItem.mutateAsync(id);
     } catch (error) {
-      toast.error(error instanceof ApiError ? error.message : 'Failed to delete item');
+      toast.error(error instanceof ApiError ? error.message : '删除失败');
     }
   };
 
@@ -55,8 +55,8 @@ export function ItemsListPage() {
     <main className="mx-auto flex min-h-svh w-full max-w-6xl flex-col gap-6 px-6 py-8">
       <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p className="text-sm text-muted-foreground">Fullstack demo</p>
-          <h1 className="text-3xl font-semibold tracking-normal">Items</h1>
+          <p className="text-sm text-muted-foreground">全栈示例</p>
+          <h1 className="text-3xl font-semibold tracking-normal">Item 管理</h1>
         </div>
         <ItemsFormDialog
           open={dialogOpen}
@@ -72,15 +72,15 @@ export function ItemsListPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Inventory</CardTitle>
-          <CardDescription>Create, search, edit, and delete items.</CardDescription>
+          <CardTitle>列表</CardTitle>
+          <CardDescription>创建、搜索、编辑和删除 item。</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="relative max-w-md">
             <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               className="pl-9"
-              placeholder="Search items"
+              placeholder="搜索 item"
               value={q}
               onChange={(event) => {
                 setQ(event.target.value);
@@ -89,15 +89,15 @@ export function ItemsListPage() {
             />
           </div>
 
-          {itemsQuery.isLoading ? <p className="text-sm text-muted-foreground">Loading...</p> : null}
+          {itemsQuery.isLoading ? <p className="text-sm text-muted-foreground">加载中...</p> : null}
           {itemsQuery.isError ? (
             <p className="text-sm text-destructive">
-              {itemsQuery.error instanceof Error ? itemsQuery.error.message : 'Failed to load items'}
+              {itemsQuery.error instanceof Error ? itemsQuery.error.message : '加载失败'}
             </p>
           ) : null}
           {data && data.items.length === 0 ? (
             <p className="rounded-md border border-dashed p-8 text-center text-sm text-muted-foreground">
-              No items yet.
+              还没有 item。
             </p>
           ) : null}
           {data && data.items.length > 0 ? (
@@ -113,7 +113,7 @@ export function ItemsListPage() {
 
           <div className="flex items-center justify-between">
             <p className="text-sm text-muted-foreground">
-              {data ? `${data.total} total` : 'No results loaded'}
+              {data ? `共 ${data.total} 条` : '暂无结果'}
             </p>
             <div className="flex gap-2">
               <Button
@@ -121,14 +121,14 @@ export function ItemsListPage() {
                 disabled={!canGoBack}
                 onClick={() => setOffset(Math.max(0, offset - pageSize))}
               >
-                Previous
+                上一页
               </Button>
               <Button
                 variant="outline"
                 disabled={!canGoNext}
                 onClick={() => setOffset(offset + pageSize)}
               >
-                Next
+                下一页
               </Button>
             </div>
           </div>

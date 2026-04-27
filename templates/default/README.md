@@ -32,10 +32,3 @@ docs/
   api/
   openapi.json
 ```
-
-## 开发约定
-
-- API 契约的单一事实源是 `packages/shared` 里的 Zod schema。
-- 新增或修改接口字段时，先改 schema，再同步 `docs/api/API-*.md`，最后执行 `pnpm gen:openapi`。
-- 前端请求统一走 TanStack Query + `src/lib/api` 封装。
-- 后端路由统一用 `validate()` 中间件校验 `body/query/params`。

@@ -12,7 +12,7 @@ export function useItemEvents() {
   useWebSocket('/ws/notifications', {
     onMessage: (message) => {
       if (isItemCreatedMessage(message)) {
-        toast.success('Item created', { description: message.data.title });
+        toast.success('已创建 item', { description: message.data.title });
         queryClient.invalidateQueries({ queryKey: itemsKeys.all });
       }
     },

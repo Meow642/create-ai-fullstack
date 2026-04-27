@@ -14,7 +14,7 @@
 | **字符编码** | UTF-8 |
 | **鉴权** | 暂无（后续接入后补充 `Authorization: Bearer <token>`） |
 | **CORS** | 服务端启用 `cors()` 通配，浏览器可跨域直连 |
-| **安全响应头** | `helmet()` 默认策略（CSP、X-Content-Type-Options 等） |
+| **安全响应头** | `helmet()` 默认策略，但关闭 CSP 以避免 Scalar `/docs` 空白 |
 
 ---
 

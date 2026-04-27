@@ -12,6 +12,28 @@ cd my-app
 pnpm dev
 ```
 
+## 本地试跑模板
+
+开发 CLI 时，可以不发 npm 包，直接用当前仓库生成一个临时项目并启动前后端：
+
+```bash
+pnpm dev:template
+```
+
+该命令会：
+
+- 构建当前 CLI。
+- 清空 `/tmp/create-ai-fullstack-dev`。
+- 在 `/tmp/create-ai-fullstack-dev/app` 生成模板项目。
+- 执行 `pnpm install`。
+- 启动生成项目的 `pnpm dev`。
+
+可通过 `CAF_DEV_TMP` 覆盖临时目录：
+
+```bash
+CAF_DEV_TMP=/tmp/my-caf-run pnpm dev:template
+```
+
 ## 生成内容
 
 - `apps/api`：Express 5、better-sqlite3、ws、Zod 校验、Scalar API 文档。

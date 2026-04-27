@@ -40,21 +40,21 @@ export function ItemsFormDialog({ open, onOpenChange, item, isPending, onSubmit 
         <DialogTrigger asChild>
           <Button>
             <Plus className="size-4" />
-            New item
+            新建 item
           </Button>
         </DialogTrigger>
       ) : null}
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{item ? 'Edit item' : 'New item'}</DialogTitle>
-          <DialogDescription>Keep the title short and specific.</DialogDescription>
+          <DialogTitle>{item ? '编辑 item' : '新建 item'}</DialogTitle>
+          <DialogDescription>标题建议简短、明确。</DialogDescription>
         </DialogHeader>
         <form
           className="space-y-4"
           onSubmit={form.handleSubmit((payload) => onSubmit(payload))}
         >
           <div className="space-y-2">
-            <Label htmlFor="title">Title</Label>
+            <Label htmlFor="title">标题</Label>
             <Input id="title" {...form.register('title')} autoFocus />
             {form.formState.errors.title ? (
               <p className="text-sm text-destructive">{form.formState.errors.title.message}</p>
@@ -62,11 +62,11 @@ export function ItemsFormDialog({ open, onOpenChange, item, isPending, onSubmit 
           </div>
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-              Cancel
+              取消
             </Button>
             <Button type="submit" disabled={isPending}>
               <Save className="size-4" />
-              Save
+              保存
             </Button>
           </DialogFooter>
         </form>

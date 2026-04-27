@@ -10,7 +10,14 @@ import itemsRouter from './routes/items';
 export function createApp() {
   const app = express();
 
-  app.use(helmet());
+  app.use(
+    helmet({
+      // Scalar API Reference renders an interactive docs app that relies on
+      // inline styles/scripts. Keep Helmet enabled, but do not emit a CSP that
+      // blanks the /docs page in development.
+      contentSecurityPolicy: false,
+    }),
+  );
   app.use(cors());
   app.use(morgan('dev'));
   app.use(express.json());

@@ -35,7 +35,7 @@ Node.js 后端：**Express 5 + TypeScript (CommonJS) + better-sqlite3 + ws + zod
 两层结构：**routes → db**。不引入 service / controller 层。
 
 - `src/index.ts` — 创建 HTTP server，挂载 Express 与 WebSocket，`server.listen(PORT)`。
-- `src/app.ts` — 构建 Express 应用并导出（不 listen，便于测试）。中间件顺序固定：`helmet → cors → morgan('dev') → express.json`，然后挂路由 → `/docs` Scalar 站点 → 404 兜底 → 错误处理。**新路由要注册在 404 handler 之前。**
+- `src/app.ts` — 构建 Express 应用并导出（不 listen，便于测试）。中间件顺序固定：`helmet({ contentSecurityPolicy: false }) → cors → morgan('dev') → express.json`，然后挂路由 → `/docs` Scalar 站点 → 404 兜底 → 错误处理。**新路由要注册在 404 handler 之前。** CSP 关闭是为了避免 Scalar 文档页被浏览器拦成空白。
 - `src/db.ts` — 模块级单例。在 `DB_PATH` 打开 better-sqlite3，开启 `journal_mode=WAL` 和 `foreign_keys=ON`，从 `process.cwd()` 读取 `schema.sql` 并 `db.exec()` 执行。任何位置 `import { db } from './db'`，首次 import 触发初始化。
 - `src/middleware/validate.ts` — `validate({ body?, query?, params? })` 高阶中间件。校验失败统一返回 `400 { error: string }`，错误消息取自第一条 Zod issue 的 `path` + `message`。
 - `src/routes/*.ts` — 一个 feature 一个文件，每个文件默认导出一个 `Router`，在 `src/app.ts` 里注册。**路由处理函数从 `req.body / req.query / req.params` 取值时，类型由 `validate` 中间件覆写为 schema 的推导类型**（参见 `validate.ts` 内的类型实现）。

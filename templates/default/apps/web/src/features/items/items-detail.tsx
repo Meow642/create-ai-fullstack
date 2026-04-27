@@ -11,23 +11,23 @@ export function ItemsDetailPage() {
   return (
     <main className="mx-auto flex min-h-svh w-full max-w-3xl flex-col gap-6 px-6 py-8">
       <Button asChild variant="outline" className="w-fit">
-        <Link to="/items">Back</Link>
+        <Link to="/items">返回</Link>
       </Button>
       <Card>
         <CardHeader>
-          <CardTitle>{itemQuery.data?.title ?? 'Item'}</CardTitle>
+          <CardTitle>{itemQuery.data?.title ?? 'Item 详情'}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-2">
-          {itemQuery.isLoading ? <p className="text-sm text-muted-foreground">Loading...</p> : null}
-          {itemQuery.isError ? <p className="text-sm text-destructive">Item not found.</p> : null}
+          {itemQuery.isLoading ? <p className="text-sm text-muted-foreground">加载中...</p> : null}
+          {itemQuery.isError ? <p className="text-sm text-destructive">未找到 item。</p> : null}
           {itemQuery.data ? (
             <>
               <p className="text-sm text-muted-foreground">ID: {itemQuery.data.id}</p>
               <p className="text-sm text-muted-foreground">
-                Created: {parseServerTime(itemQuery.data.createdAt).toLocaleString()}
+                创建时间：{parseServerTime(itemQuery.data.createdAt).toLocaleString()}
               </p>
               <p className="text-sm text-muted-foreground">
-                Updated: {parseServerTime(itemQuery.data.updatedAt).toLocaleString()}
+                更新时间：{parseServerTime(itemQuery.data.updatedAt).toLocaleString()}
               </p>
             </>
           ) : null}

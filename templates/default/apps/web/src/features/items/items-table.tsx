@@ -22,9 +22,9 @@ export function ItemsTable({ items, onEdit, onDelete }: Props) {
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead>Title</TableHead>
-          <TableHead>Created</TableHead>
-          <TableHead className="w-28 text-right">Actions</TableHead>
+          <TableHead>标题</TableHead>
+          <TableHead>创建时间</TableHead>
+          <TableHead className="w-28 text-right">操作</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -36,13 +36,13 @@ export function ItemsTable({ items, onEdit, onDelete }: Props) {
             </TableCell>
             <TableCell>
               <div className="flex justify-end gap-2">
-                <Button variant="ghost" size="icon" aria-label="Edit" onClick={() => onEdit(item)}>
+                <Button variant="ghost" size="icon" aria-label="编辑" onClick={() => onEdit(item)}>
                   <Edit className="size-4" />
                 </Button>
                 <Button
                   variant="ghost"
                   size="icon"
-                  aria-label="Delete"
+                  aria-label="删除"
                   onClick={() => onDelete(item.id)}
                 >
                   <Trash2 className="size-4" />

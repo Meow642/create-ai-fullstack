@@ -8,7 +8,7 @@
 
 ## 项目定位
 
-这是一个**面向 AI 编码代理（Claude Code / Cursor / Copilot 等）优化的全栈模板**。结构、契约与文档刻意写成 AI 友好的形态，目的是让 AI 在生成业务代码时有清晰、可遵循的规范。
+这是一个**面向 CLAUDE CODE / CODEX / OPENCODE 优化的全栈模板**。结构、契约与文档刻意写成 AI 友好的形态，目的是让 AI 在生成业务代码时有清晰、可遵循的规范。
 
 > 由 [`create-ai-fullstack`](https://www.npmjs.com/package/create-ai-fullstack) CLI 初始化生成。
 
@@ -66,7 +66,7 @@ API 契约由三层构成，**单一事实源是 `packages/shared` 里的 Zod sc
 | 命令 | 作用 |
 |---|---|
 | `pnpm install` | 安装所有 workspace 依赖 |
-| `pnpm dev` | 同时启动前后端（`pnpm -r --parallel run dev`） |
+| `pnpm dev` | 同时启动前后端（Ctrl+C 会安静停止两个服务） |
 | `pnpm build` | 顺序构建 shared → api / web |
 | `pnpm lint` | 全仓 ESLint |
 | `pnpm format` | 全仓 Prettier 写回 |
@@ -92,4 +92,11 @@ API 契约由三层构成，**单一事实源是 `packages/shared` 里的 Zod sc
 - **时间字段是 `YYYY-MM-DD HH:mm:ss` UTC**，不是 ISO 8601。前端解析用 `parseServerTime`。
 - **新增模块务必三处同步**：shared schema → `API-<module>.md` → `pnpm gen:openapi`。
 - **路径别名**：前端 `@/*`，跨包 `@workspace/shared`，**不要相对路径跨包**。
-- **环境变量**：后端用 `node --env-file=.env`，**不要**装 `dotenv` 包。
+- **环境变量**：后端用 `node --env-file-if-exists=.env`，**不要**装 `dotenv` 包。
+
+## 项目开发约定
+
+- API 契约的单一事实源是 `packages/shared` 里的 Zod schema。
+- 前端请求统一走 TanStack Query + `src/lib/api` 封装。
+- 后端路由统一用 `validate()` 中间件校验 `body/query/params`。
+- `docs/openapi.json` 是离线机器可读文档，修改 schema 后执行 `pnpm gen:openapi` 刷新；`/docs` 页面运行时直接读取当前 schema 生成。

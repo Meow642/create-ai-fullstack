@@ -15,6 +15,7 @@
   "scripts": {
     "build": "tsup",
     "dev": "tsx src/index.ts",
+    "dev:template": "bash scripts/dev-template.sh",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "test": "node --test",

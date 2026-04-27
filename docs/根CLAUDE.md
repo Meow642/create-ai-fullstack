@@ -8,7 +8,7 @@
 
 ## 项目定位
 
-这是一个**面向 AI 编码代理（Claude Code / Cursor / Copilot 等）优化的全栈模板**。结构、契约与文档刻意写成 AI 友好的形态，目的是让 AI 在生成业务代码时有清晰、可遵循的规范。
+这是一个**面向 CLAUDE CODE / CODEX / OPENCODE 优化的全栈模板**。结构、契约与文档刻意写成 AI 友好的形态，目的是让 AI 在生成业务代码时有清晰、可遵循的规范。
 
 > 由 [`create-ai-fullstack`](https://www.npmjs.com/package/create-ai-fullstack) CLI 初始化生成。
 

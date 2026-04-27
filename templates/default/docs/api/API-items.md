@@ -1,20 +1,20 @@
 # API-items.md
 
-Items demo API. The source of truth is `packages/shared/src/items/schema.ts`.
+Items demo API。单一事实源是 `packages/shared/src/items/schema.ts`。
 
-## Endpoints
+## 接口列表
 
-| Method | Path | Description |
+| 方法 | 路径 | 说明 |
 |---|---|---|
-| GET | `/items` | List items with `limit`, `offset`, and optional `q` search. |
-| POST | `/items` | Create an item. |
-| GET | `/items/:id` | Get one item. |
-| PATCH | `/items/:id` | Update one item. |
-| DELETE | `/items/:id` | Delete one item. |
+| GET | `/items` | 查询 item 列表，支持 `limit`、`offset` 和可选搜索参数 `q`。 |
+| POST | `/items` | 创建 item。 |
+| GET | `/items/:id` | 查询单个 item。 |
+| PATCH | `/items/:id` | 更新单个 item。 |
+| DELETE | `/items/:id` | 删除单个 item。 |
 
 ## WebSocket
 
-Connect to `/ws/notifications`. On item creation the server broadcasts:
+连接 `/ws/notifications`。当 item 创建成功后，服务端会广播：
 
 ```json
 {
