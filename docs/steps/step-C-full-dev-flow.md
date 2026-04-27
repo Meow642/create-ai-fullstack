@@ -1,4 +1,4 @@
-# 里程碑 C — `full-dev-flow` Skill + 7 子 Agent + Worktree 编排（v0.3.0）
+# 里程碑 C — `full-dev-flow` Skill + 7 子 Agent + Worktree 编排（v0.3.0）[此文档仅供参考，实现请参考 step-C-step-dev-flow.md 进行分步实现]
 
 > 对应源计划章节：[dev-plan-full.md §C 节](../dev-plan-full.md)
 > 前置：仅依赖 A（v0.1.0）。**不依赖 B**（C 即使在 B 之前做也成立——C 自己创建 `.claude/skills/` 与 `.claude/agents/` 与 `.codex/agents/`）。

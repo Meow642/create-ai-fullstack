@@ -7,8 +7,8 @@
 | 里程碑 | 文件 | 目标版本 | 关键交付 | 是否依赖前一阶段 |
 |---|---|---|---|---|
 | A | [step-A-cli-baseline.md](step-A-cli-baseline.md) | v0.1.0 | CLI + 可运行 fullstack monorepo 模板（含 items CRUD + WS demo） | — |
-| B | [step-B-agents-md.md](step-B-agents-md.md) | v0.2.0 | AGENTS.md 化 + 多 AI 工具兼容（symlink、Codex TOML） | 仅依赖 A |
-| C | [step-C-full-dev-flow.md](step-C-full-dev-flow.md) | v0.3.0 | `full-dev-flow` skill + 7 子 agent + git worktree 编排 | 仅依赖 A（无需 B） |
+| B | [step-B-agents-md.md](step-B-agents-md.md) | v0.2.0 | AGENTS.md 化 + 多 AI 工具通用项目指引 | 仅依赖 A |
+| C | [step-C-step-dev-flow.md](step-C-step-dev-flow.md) | v0.3.0 | `full-dev-flow` 渐进式落地：C1 simple mode → C2 worktree → C3 跨工具兼容 | 仅依赖 A（无需 B） |
 | D | [step-D-playwright-visual.md](step-D-playwright-visual.md) | v0.4.0 | `@playwright/cli` 集成 + visual-qa 视觉验收回路 | 仅依赖 A（无需 B/C） |
 
 ## 公共硬性约束（每阶段都要遵守）

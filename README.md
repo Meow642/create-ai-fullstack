@@ -44,7 +44,7 @@ CAF_DEV_TMP=/tmp/my-caf-run pnpm dev:template
 
 生成项目使用 `AGENTS.md` 作为 AI 编码代理指引的单一事实源，并保留 `CLAUDE.md` pointer 兼容 Claude Code。
 
-原生或通过 fallback 支持：
+项目指引原生或通过 fallback 支持：
 
 - Claude Code
 - Codex
@@ -52,7 +52,7 @@ CAF_DEV_TMP=/tmp/my-caf-run pnpm dev:template
 - Cursor
 - Windsurf
 
-生成时会动态创建 `.agents/skills` 和 `.opencode/skills`，指向同一份 `.claude/skills`，为后续项目级 skills 做兼容准备。
+C1 已内置 Claude Code 主路径的 `.claude/skills/full-dev-flow` 与 `.claude/agents/*`。Codex/OpenCode 的 skill mirror 和专用 agent wrapper 留到 C3，当前 scaffold 不生成 `.agents/skills`、`.opencode/skills` 或 `.codex/agents`。
 
 ## 开发地址
 

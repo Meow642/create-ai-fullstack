@@ -1,6 +1,6 @@
 {
   "name": "create-ai-fullstack",
-  "version": "0.2.0",
+  "version": "0.3.0-alpha.1",
   "description": "Create an AI-friendly fullstack pnpm monorepo template.",
   "type": "module",
   "bin": {
@@ -18,7 +18,7 @@
     "dev:template": "bash scripts/dev-template.sh",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
-    "test": "node --test",
+    "test": "node --test test/**/*.test.mjs",
     "verify": "pnpm build && bash scripts/verify-template.sh"
   },
   "dependencies": {
