@@ -15,23 +15,23 @@ try {
   const checkpoints = state.checkpoints ?? {};
   const hasPendingCheckpoint = Object.values(checkpoints).some((value) => value !== 'approved');
 
-  console.log(`full-dev-flow state found: phase=${state.phase ?? 'unknown'} wave=${state.wave ?? 'unknown'}`);
+  console.log(`发现 full-dev-flow 状态：phase=${state.phase ?? 'unknown'} wave=${state.wave ?? 'unknown'}`);
   console.log(`last_activity=${state.last_activity ?? 'unknown'}`);
-  console.log(`checkpoints=${formatCheckpointStatus(checkpoints) || 'none'}`);
+  console.log(`checkpoints=${formatCheckpointStatus(checkpoints) || '无'}`);
 
   if (hasPendingCheckpoint) {
-    console.log('A checkpoint is not approved. Ask the user whether to continue, restart, or abandon this flow.');
+    console.log('存在尚未批准的 checkpoint。请先询问用户要继续、重开还是放弃当前流程。');
   } else {
-    console.log('All checkpoints are approved. Start a new flow only if the user requests it.');
+    console.log('所有 checkpoint 都已批准。只有在用户明确要求时才开始新流程。');
   }
 } catch (error) {
   if (error && error.code === 'ENOENT') {
-    console.log('No .dev/state.json found. Start full-dev-flow from Phase 1.');
+    console.log('未发现 .dev/state.json。请从阶段 1 开始 full-dev-flow。');
     process.exit(0);
   }
 
   if (error instanceof SyntaxError) {
-    console.error('Invalid .dev/state.json. Ask the user whether to repair, restart, or abandon this flow.');
+    console.error('.dev/state.json 格式无效。请询问用户要修复、重开还是放弃当前流程。');
     process.exit(1);
   }
 

@@ -44,4 +44,4 @@ done
 test ! -e .agents/skills
 test ! -e .opencode/skills
 test ! -e .codex/agents
-node .claude/skills/full-dev-flow/scripts/check-state.mjs | grep -q 'Phase 1'
+node .claude/skills/full-dev-flow/scripts/check-state.mjs | grep -q '阶段 1'

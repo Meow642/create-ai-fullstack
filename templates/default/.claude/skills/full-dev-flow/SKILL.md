@@ -1,36 +1,36 @@
 ---
 name: full-dev-flow
-description: Run the C1 full development flow for small fullstack changes: plan, split tasks, implement serially with Claude Code subagents, and verify.
+description: 用于小型全栈需求的 C1 开发流程：先写计划，再拆任务，随后用 Claude Code 子代理串行实现并验证。
 ---
 
 # full-dev-flow
 
-Use this skill when the user asks to turn a product requirement, API change, UI request, or small fullstack feature into working code in this generated project.
+当用户希望把产品需求、API 变更、UI 请求或小型全栈功能落成当前生成项目中的可运行代码时，使用此 skill。
 
-C1 is intentionally simple:
+C1 刻意保持简单：
 
-- Use Claude Code project subagents from `.claude/agents/`.
-- Run everything serially in the main workspace.
-- Do not create git worktrees, branches, pull requests, or remote pushes.
-- Do not create or rely on Codex/OpenCode agent compatibility files.
-- Keep the workflow small enough for a 1 to 3 task implementation.
+- 使用 `.claude/agents/` 中的 Claude Code 项目级子代理。
+- 所有工作都在主工作区串行完成。
+- 不创建 git worktree、分支、pull request，也不执行远程 push。
+- 不创建或依赖 Codex/OpenCode agent 兼容文件。
+- 将流程控制在 1 到 3 个任务能够完成的范围内。
 
-## Startup
+## 启动检查
 
-1. Run `node .claude/skills/full-dev-flow/scripts/check-state.mjs`.
-2. If `.dev/state.json` exists and any checkpoint is still pending, ask the user whether to continue, restart, or abandon the current flow before changing files.
-3. If there is no state file, start Phase 1.
+1. 运行 `node .claude/skills/full-dev-flow/scripts/check-state.mjs`。
+2. 如果 `.dev/state.json` 存在，且仍有 checkpoint 未完成，在改文件前先询问用户要继续、重开还是放弃当前流程。
+3. 如果没有状态文件，从阶段 1 开始。
 
-## Phase 1: Requirements And Plan
+## 阶段 1：需求理解与计划
 
-Goal: understand the request and write `.dev/plan.md`.
+目标：理解需求并写出 `.dev/plan.md`。
 
-Steps:
+步骤：
 
-1. Read the user's requirement and inspect the relevant code paths.
-2. Ask concise clarification questions only when the implementation would otherwise be risky.
-3. Create `.dev/plan.md` from `templates/plan-template.md`.
-4. Create or update `.dev/state.json`:
+1. 阅读用户需求，并检查相关代码路径。
+2. 只有在不澄清会带来明显实现风险时，才提出简短问题。
+3. 按 `templates/plan-template.md` 创建 `.dev/plan.md`。
+4. 创建或更新 `.dev/state.json`：
 
 ```json
 {
@@ -43,53 +43,53 @@ Steps:
 }
 ```
 
-Use the current UTC timestamp for `last_activity`.
+`last_activity` 使用当前 UTC 时间。
 
-Checkpoint 1: stop and ask the user to approve or revise `.dev/plan.md`.
+确认点 1：停止执行，请用户确认或修改 `.dev/plan.md`。
 
-## Phase 2: Task Split
+## 阶段 2：任务拆分
 
-Goal: turn the approved plan into a small serial task list.
+目标：把已确认的计划拆成小规模串行任务。
 
-Steps:
+步骤：
 
-1. Create `.dev/tasks/`.
-2. Create `.dev/tasks/contracts.md` from `templates/contracts-template.md`.
-3. Create 1 to 3 task files from `templates/task-template.md`.
-4. Create `.dev/merge-plan.md` from `templates/merge-plan-template.md`.
-5. Update `.dev/state.json` with `phase: 2`, `checkpoints.1: "approved"`, and `checkpoints.2: "pending"`.
+1. 创建 `.dev/tasks/`。
+2. 按 `templates/contracts-template.md` 创建 `.dev/tasks/contracts.md`。
+3. 按 `templates/task-template.md` 创建 1 到 3 个任务文件。
+4. 按 `templates/merge-plan-template.md` 创建 `.dev/merge-plan.md`。
+5. 更新 `.dev/state.json`，写入 `phase: 2`、`checkpoints.1: "approved"`、`checkpoints.2: "pending"`。
 
-C1 task files may only use these agents:
+C1 任务文件只能使用这些 agent：
 
 - `contract-author`
 - `feature-developer`
 - `test-runner`
 
-Checkpoint 2: stop and ask the user to approve or revise the task split.
+确认点 2：停止执行，请用户确认或修改任务拆分。
 
-## Phase 3: Serial Implementation And Verification
+## 阶段 3：串行实现与验证
 
-Goal: complete the approved tasks in the main workspace.
+目标：在主工作区完成已确认的任务。
 
-Run the agents in this order:
+按以下顺序运行 agent：
 
-1. `contract-author`: update shared schemas, API docs, and generated OpenAPI when the task requires contract changes.
-2. `feature-developer`: implement backend, frontend, database, and glue code required by the approved tasks.
-3. `test-runner`: run the focused and full verification commands, then report exact results.
+1. `contract-author`：当任务需要契约变更时，更新 shared schema、API 文档和生成的 OpenAPI。
+2. `feature-developer`：实现已确认任务所需的后端、前端、数据库和 glue code。
+3. `test-runner`：运行聚焦验证和完整验证命令，并报告准确结果。
 
-Update `.dev/state.json` as work progresses:
+随着工作推进更新 `.dev/state.json`：
 
-- Set `phase` to `3`.
-- Add active task IDs to `running_tasks`.
-- Move finished task IDs to `completed_tasks`.
-- Set `checkpoints.2` to `"approved"` after the user approves Phase 2.
-- Set `checkpoints.3` to `"pending"` until final user acceptance.
+- 将 `phase` 设为 `3`。
+- 将正在执行的任务 ID 加入 `running_tasks`。
+- 将已完成的任务 ID 移入 `completed_tasks`。
+- 用户确认阶段 2 后，将 `checkpoints.2` 设为 `"approved"`。
+- 最终验收前，保持 `checkpoints.3` 为 `"pending"`。
 
-Checkpoint 3: output the final verification summary, changed behavior, and any remaining risks. Ask the user for final acceptance or further fixes.
+确认点 3：输出最终验证摘要、行为变化和剩余风险，请用户做最终验收或要求继续修复。
 
-## Required Verification
+## 必要验证
 
-For C1, use the smallest set that proves the change, then run the A-stage regression commands before final acceptance when feasible:
+对 C1，先运行能证明变更正确的最小验证集；在可行时，最终验收前再运行 A 阶段回归命令：
 
 ```bash
 pnpm typecheck
@@ -98,12 +98,12 @@ pnpm test
 pnpm build
 ```
 
-If dependencies have not been installed, run `pnpm install` first.
+如果依赖尚未安装，先运行 `pnpm install`。
 
-## Hard Limits
+## 硬性限制
 
-- Do not create git worktrees.
-- Do not create `.codex/agents/`, `.opencode/agents/`, `.agents/skills/`, or compatibility mirrors.
-- Do not spawn more than the 3 C1 agents.
-- Do not implement Playwright visual QA in C1.
-- Do not change dependency versions unless the user explicitly approves it.
+- 不创建 git worktree。
+- 不创建 `.codex/agents/`、`.opencode/agents/`、`.agents/skills/` 或兼容 mirror。
+- 不使用超过 3 个 C1 agent。
+- C1 不实现 Playwright 视觉验收。
+- 除非用户明确批准，否则不修改依赖版本。

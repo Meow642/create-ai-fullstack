@@ -1,24 +1,24 @@
-# Contracts
+# 契约说明
 
-## Summary
+## 摘要
 
-Describe the schema/API contract changes required by this flow.
+说明本次流程需要的 schema / API 契约变更。
 
-## Shared Schema Changes
+## Shared Schema 变更
 
 - `packages/shared/src/<module>/schema.ts`:
 
-## API Documentation Changes
+## API 文档变更
 
 - `docs/api/API-<module>.md`:
 - `docs/openapi.json`:
 
-## Compatibility Notes
+## 兼容性说明
 
-- Request compatibility:
-- Response compatibility:
-- Migration or seed data impact:
+- 请求兼容性：
+- 响应兼容性：
+- 迁移或种子数据影响：
 
-## Contract Tasks
+## 契约任务
 
-- Task IDs owned by `contract-author`:
+- 由 `contract-author` 负责的任务 ID：

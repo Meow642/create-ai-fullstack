@@ -1,33 +1,33 @@
-# Development Plan: <requirement title>
+# 开发计划：<需求标题>
 
-## Requirement
+## 需求
 
-Summarize the user request and any confirmed clarifications.
+总结用户需求和已确认的澄清信息。
 
-## Current State
+## 当前状态
 
-List the relevant existing modules, files, schemas, routes, and UI flows.
+列出相关的现有模块、文件、schema、路由和 UI 流程。
 
-## Proposed Change
+## 变更方案
 
-Describe the smallest implementation that satisfies the request.
+描述满足需求的最小实现方案。
 
-## P0 Scope
+## P0 范围
 
-- [ ] Contract changes:
-- [ ] Backend changes:
-- [ ] Frontend changes:
-- [ ] Tests and docs:
+- [ ] 契约变更：
+- [ ] 后端变更：
+- [ ] 前端变更：
+- [ ] 测试与文档：
 
-## Out Of Scope
+## 不在范围内
 
-- Items explicitly deferred from C1.
+- 明确延期到 C1 之后的事项。
 
-## Risks And Questions
+## 风险与问题
 
-- Open questions:
-- Implementation risks:
+- 待确认问题：
+- 实现风险：
 
-## Checkpoint 1
+## 确认点 1
 
-Human approval required before creating task files.
+创建任务文件前必须获得用户确认。
