@@ -7,17 +7,22 @@ const workspaceRoot = path.resolve(rootDir, '..');
 const isWindows = process.platform === 'win32';
 const binExt = isWindows ? '.cmd' : '';
 
+function binCommand(packageDir, name) {
+  const command = path.join(workspaceRoot, packageDir, 'node_modules/.bin', `${name}${binExt}`);
+  return isWindows ? `"${command}"` : command;
+}
+
 const processes = [
   {
     name: 'api',
     cwd: path.join(workspaceRoot, 'apps/api'),
-    command: path.join(workspaceRoot, 'apps/api/node_modules/.bin', `tsx${binExt}`),
+    command: binCommand('apps/api', 'tsx'),
     args: ['watch', '--env-file-if-exists=.env', 'src/index.ts'],
   },
   {
     name: 'web',
     cwd: path.join(workspaceRoot, 'apps/web'),
-    command: path.join(workspaceRoot, 'apps/web/node_modules/.bin', `vite${binExt}`),
+    command: binCommand('apps/web', 'vite'),
     args: [],
   },
 ];
@@ -35,6 +40,7 @@ for (const processConfig of processes) {
   const child = spawn(processConfig.command, processConfig.args, {
     cwd: processConfig.cwd,
     stdio: 'inherit',
+    shell: isWindows,
   });
 
   children.push(child);
