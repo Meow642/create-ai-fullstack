@@ -1,0 +1,24 @@
+flowchart TD
+  requirement["用户需求"]
+  inspect["检查现有代码与约束"]
+  plan["生成 .dev/plan.md"]
+  flow["生成 .dev/flow.mmd"]
+  preview["打开计划与 Mermaid 预览"]
+  checkpoint1["确认点 1：用户确认计划"]
+  contracts["契约变更：shared schema / API 文档 / OpenAPI"]
+  backend["后端实现：routes / db / ws"]
+  frontend["前端实现：页面 / 组件 / API 调用"]
+  verify["验证：typecheck / lint / test / build"]
+  checkpoint3["确认点 3：最终验收"]
+
+  requirement --> inspect
+  inspect --> plan
+  plan --> flow
+  flow --> preview
+  preview --> checkpoint1
+  checkpoint1 --> contracts
+  contracts --> backend
+  contracts --> frontend
+  backend --> verify
+  frontend --> verify
+  verify --> checkpoint3

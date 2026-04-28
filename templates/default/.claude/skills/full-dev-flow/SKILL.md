@@ -23,14 +23,16 @@ C1 刻意保持简单：
 
 ## 阶段 1：需求理解与计划
 
-目标：理解需求并写出 `.dev/plan.md`。
+目标：理解需求并写出 `.dev/plan.md` 与 `.dev/flow.mmd`。
 
 步骤：
 
 1. 阅读用户需求，并检查相关代码路径。
 2. 只有在不澄清会带来明显实现风险时，才提出简短问题。
-3. 按 `templates/plan-template.md` 创建 `.dev/plan.md`。
-4. 创建或更新 `.dev/state.json`：
+3. 按 `templates/plan-template.md` 创建或更新 `.dev/plan.md`。
+4. 按 `templates/flow-template.mmd` 创建或更新 `.dev/flow.mmd`，用 Mermaid 描述本次需求从计划到验收的开发流程。
+5. 每次创建或更新 `.dev/plan.md` / `.dev/flow.mmd` 后，立即运行 `node .claude/skills/full-dev-flow/scripts/open-phase1-artifacts.mjs`，用用户本机文本编辑器打开计划，并用默认浏览器打开 Mermaid 流程图预览。
+6. 创建或更新 `.dev/state.json`：
 
 ```json
 {
@@ -45,7 +47,7 @@ C1 刻意保持简单：
 
 `last_activity` 使用当前 UTC 时间。
 
-确认点 1：停止执行，请用户确认或修改 `.dev/plan.md`。
+确认点 1：停止执行，请用户同时审阅 `.dev/plan.md` 和 Mermaid 流程图预览，并确认或提出修改。
 
 ## 阶段 2：任务拆分
 
