@@ -18,8 +18,10 @@
     "dev:template": "bash scripts/dev-template.sh",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
-    "test": "node --test test",
-    "verify": "pnpm build && bash scripts/verify-template.sh"
+    "test": "node --test \"test/**/*.test.mjs\"",
+    "verify": "pnpm build && bash scripts/verify-template.sh",
+    "release": "node scripts/publish.mjs",
+    "release:dry-run": "node scripts/publish.mjs --dry-run"
   },
   "dependencies": {
     "@clack/prompts": "^1.2.0",

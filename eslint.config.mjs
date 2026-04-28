@@ -12,6 +12,14 @@ export default [
   },
   js.configs.recommended,
   ...tseslint.configs.recommended,
+  {
+    files: ['**/*.{js,mjs,cjs,ts,tsx,mts,cts}'],
+    languageOptions: {
+      parserOptions: {
+        tsconfigRootDir,
+      },
+    },
+  },
   prettier,
   {
     files: ['src/**/*.ts', 'tsup.config.ts'],
