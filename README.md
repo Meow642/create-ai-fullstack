@@ -73,6 +73,6 @@ create-ai-fullstack [dir] [--no-install] [--no-git]
 ## 环境要求
 
 - Node.js `>=22.0.0`
-- pnpm `>=9`
+- pnpm `>=10.33.0`
 
 当前版本只支持 pnpm，不会询问包管理器。

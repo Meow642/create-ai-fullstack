@@ -29,7 +29,7 @@
 
 **依赖版本**：必须严格使用 [dev-plan-full.md §8 依赖版本锁定](../dev-plan-full.md) 表中数值。任何变更需先跑 `npm view <pkg> version`，把输出贴进本文件再修改。
 
-**Native 模块**：根 `package.json` 必须含 `"pnpm": { "onlyBuiltDependencies": ["better-sqlite3"] }`。
+**Native 模块**：根 `package.json` 必须含 `"pnpm": { "onlyBuiltDependencies": ["better-sqlite3", "esbuild"] }`。
 
 ## 3. 不做什么（划清边界）
 

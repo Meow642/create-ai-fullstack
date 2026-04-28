@@ -67,7 +67,7 @@ API 契约由三层构成，**单一事实源是 `packages/shared` 里的 Zod sc
 
 ## 常用命令（根级）
 
-> 本项目用 **pnpm workspaces**，要求 `pnpm >= 9` 与 `Node >= 22`。
+> 本项目用 **pnpm workspaces**，要求 `pnpm >= 10.33.0` 与 `Node >= 22`。
 
 | 命令 | 作用 |
 |---|---|
