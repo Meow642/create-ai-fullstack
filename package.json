@@ -18,7 +18,7 @@
     "dev:template": "bash scripts/dev-template.sh",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
-    "test": "node --test test/**/*.test.mjs",
+    "test": "node --test test",
     "verify": "pnpm build && bash scripts/verify-template.sh"
   },
   "dependencies": {

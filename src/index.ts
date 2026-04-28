@@ -1,9 +1,19 @@
+import { readFileSync } from 'node:fs';
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import cac from 'cac';
 import { runPostScaffold } from './post.js';
 import { resolveScaffoldOptions } from './prompts.js';
 import { scaffoldProject } from './scaffold.js';
 import { detectPnpm } from './utils/detect-pnpm.js';
 import { logger } from './utils/logger.js';
+
+type PackageJson = {
+  version: string;
+};
+
+const packageJsonPath = resolve(dirname(fileURLToPath(import.meta.url)), '../package.json');
+const packageVersion = (JSON.parse(readFileSync(packageJsonPath, 'utf8')) as PackageJson).version;
 
 const cli = cac('create-ai-fullstack');
 
@@ -27,5 +37,5 @@ cli
   });
 
 cli.help();
-cli.version('0.3.0-alpha.1');
+cli.version(packageVersion);
 cli.parse();
