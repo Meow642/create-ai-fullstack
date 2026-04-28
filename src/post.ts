@@ -1,5 +1,6 @@
 import { spawn } from 'node:child_process';
 import { type ScaffoldOptions } from './types.js';
+import { shouldUseShellForPnpm } from './utils/detect-pnpm.js';
 import { logger } from './utils/logger.js';
 
 export async function runPostScaffold(options: ScaffoldOptions) {
@@ -25,7 +26,11 @@ export async function runPostScaffold(options: ScaffoldOptions) {
 
 function run(command: string, args: string[], cwd: string) {
   return new Promise<void>((resolve, reject) => {
-    const child = spawn(command, args, { cwd, stdio: 'inherit' });
+    const child = spawn(command, args, {
+      cwd,
+      stdio: 'inherit',
+      shell: command === 'pnpm' && shouldUseShellForPnpm(),
+    });
     child.on('error', reject);
     child.on('close', (code) => {
       if (code === 0) {
