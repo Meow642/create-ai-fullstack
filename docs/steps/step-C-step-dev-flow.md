@@ -5,6 +5,12 @@
 >
 > 本里程碑不再一次性实现“7 子 Agent + Worktree 编排 + 跨工具兼容”的完整形态，而是拆成 **C1 / C2 / C3** 三个可验收小阶段：先让流程跑起来，再逐步增强并发、恢复、跨工具兼容。
 
+## 当前调整（2026-05-02）
+
+C1 曾经落地过一版 `.claude/skills/full-dev-flow`、`.claude/agents/*` 与 `.dev/.gitkeep`，但为了给后续基于 superpowers 的任务调度方案让路，当前模板已先撤回这些项目级 skill / agent 入口。
+
+本文件下面的 C1/C2/C3 仍作为历史设计与后续重构参考；实际 scaffold 现阶段只保留 `AGENTS.md` 通用项目指引，不再生成 `.claude/skills`、`.claude/agents`、`.dev`、`.agents/skills`、`.opencode/skills` 或 `.codex/agents`。
+
 ## 0. 外部规范核查结论（Claude Code / Codex / OpenCode）
 
 本节记录实施前需要遵守的目录结构与兼容性判断。若后续官方文档变化，以实施当日官方文档为准，并在本文件末尾追加复核记录。

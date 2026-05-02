@@ -149,11 +149,7 @@ pnpm gen:openapi
 
 支持 Claude Code、Codex、OpenCode、Cursor、Windsurf 等工具读取项目指引。
 
-项目内还预置了 Claude 子代理示例：
-
-- `.claude/agents/contract-author.md`：适合维护共享契约与 OpenAPI。
-- `.claude/agents/feature-developer.md`：适合实现前后端业务功能。
-- `.claude/agents/test-runner.md`：适合运行测试并反馈失败原因。
+当前模板不预置项目级 skills 或子 agent。后续如需自动化开发流、任务调度或专用代理，可在保持 `AGENTS.md` 规则为单一事实源的前提下再接入。
 
 ## 新功能开发建议
 

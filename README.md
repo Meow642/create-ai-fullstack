@@ -52,7 +52,7 @@ CAF_DEV_TMP=/tmp/my-caf-run pnpm dev:template
 - Cursor
 - Windsurf
 
-C1 已内置 Claude Code 主路径的 `.claude/skills/full-dev-flow` 与 `.claude/agents/*`。Codex/OpenCode 的 skill mirror 和专用 agent wrapper 留到 C3，当前 scaffold 不生成 `.agents/skills`、`.opencode/skills` 或 `.codex/agents`。
+当前 scaffold 只生成通用项目指引，不预置项目级 skills 或子 agent。后续任务调度入口会在 C 阶段重新设计，避免旧版 `full-dev-flow` 与新调度机制互相干扰。
 
 ## 开发地址
 

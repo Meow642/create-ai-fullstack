@@ -27,29 +27,9 @@ grep -q 'AGENTS.md' CLAUDE.md
 grep -q 'AGENTS.md' apps/web/CLAUDE.md
 grep -q 'AGENTS.md' apps/api/CLAUDE.md
 grep -q 'AGENTS.md' packages/shared/CLAUDE.md
-test -f .dev/.gitkeep
-test -f .claude/skills/full-dev-flow/SKILL.md
-test -f .claude/skills/full-dev-flow/templates/task-template.md
-test -f .claude/skills/full-dev-flow/templates/plan-template.md
-test -f .claude/skills/full-dev-flow/templates/contracts-template.md
-test -f .claude/skills/full-dev-flow/templates/merge-plan-template.md
-test -f .claude/skills/full-dev-flow/templates/flow-template.mmd
-test -f .claude/skills/full-dev-flow/scripts/check-state.mjs
-test -f .claude/skills/full-dev-flow/scripts/open-phase1-artifacts.mjs
-grep -q 'name: full-dev-flow' .claude/skills/full-dev-flow/SKILL.md
-grep -q 'description:' .claude/skills/full-dev-flow/SKILL.md
-grep -q '"mermaid":' package.json
-for a in contract-author feature-developer test-runner; do
-  test -f ".claude/agents/$a.md"
-  grep -q 'name:' ".claude/agents/$a.md"
-  grep -q 'description:' ".claude/agents/$a.md"
-done
+test ! -e .dev
+test ! -e .claude/skills
+test ! -e .claude/agents
 test ! -e .agents/skills
 test ! -e .opencode/skills
 test ! -e .codex/agents
-node .claude/skills/full-dev-flow/scripts/check-state.mjs | grep -q '阶段 1'
-printf '# 测试计划\n' > .dev/plan.md
-printf 'flowchart TD\n  A["需求"] --> B["确认点 1"]\n' > .dev/flow.mmd
-FULL_DEV_FLOW_NO_OPEN=1 node .claude/skills/full-dev-flow/scripts/open-phase1-artifacts.mjs
-test -f .dev/flow-preview.html
-grep -q 'node_modules/mermaid/dist/mermaid.min.js' .dev/flow-preview.html

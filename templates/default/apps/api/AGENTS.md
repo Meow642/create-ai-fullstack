@@ -3,8 +3,7 @@
 > **AI 工具兼容**：本文件遵循 [AGENTS.md 开放标准](https://agents.md)。
 > Claude Code / OpenCode / Codex / Cursor / Windsurf 均原生或通过 fallback 读取本文件。
 > 子目录的 AGENTS.md 在该子目录下工作时优先级更高。
-> C1 项目级 skill 主路径：`.claude/skills/`；Codex/OpenCode skill mirror 留到 C3。
-> C1 子 Agent 主路径：`.claude/agents/*.md`（Claude Code）；Codex/OpenCode 专用 agent 兼容层留到 C3。
+> 当前模板不预置项目级 skills 或子 agent；自动化开发流会在后续阶段重新接入。
 
 本文件为 AI 编码代理在**后端子项目**（`apps/api`）中工作时的指引。Monorepo 根级指引见仓库根目录的 [AGENTS.md](../../AGENTS.md)。
 
