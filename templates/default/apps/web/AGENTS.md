@@ -23,7 +23,7 @@
 
 ## 技术栈
 
-前端：**Vite 8 + React 19 + TypeScript + React Router v7 + Tailwind CSS v4 + shadcn/ui + TanStack Query + Axios + zustand + react-hook-form + zod**，对接独立的 Express 后端（见 [docs/api/API.md](../../docs/api/API.md)）。
+前端：**Vite 8 + React 19 + TypeScript + React Router v7 + Tailwind CSS v4 + shadcn/ui + TanStack Query + Axios + zustand + react-hook-form + zod**，对接独立的 Express 后端。接口定义以 `@workspace/shared` 和运行时 `http://localhost:3000/docs` 为准。
 
 - **类型与校验**：所有请求/响应类型与表单校验 schema 都来自 `@workspace/shared`，**不在前端手抄 interface**。
 - **表单**：统一 `react-hook-form` + `@hookform/resolvers/zod`，schema 与后端共用同一个。
@@ -52,7 +52,7 @@
 - [src/lib/api/ws.ts](src/lib/api/ws.ts) — `useWebSocket(path, { onMessage })` hook，自动重连、心跳。
 - [src/lib/api/index.ts](src/lib/api/index.ts) — 桶导出，业务层统一 `from "@/lib/api"`。
 
-后端约定（详见 [docs/api/API.md](../../docs/api/API.md)）：
+后端约定：
 - 所有错误响应结构一致：`{ error: string }`。
 - 列表接口统一返回 `Paginated<T>`。
 - `DELETE` 成功返回 `204`，无 body（`http.delete` 已处理，返回 `null`）。

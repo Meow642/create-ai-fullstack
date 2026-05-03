@@ -4,11 +4,14 @@ import express, { type ErrorRequestHandler } from 'express';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import { buildOpenApiDocument } from '@workspace/shared';
+import { restrictOpenApiAccess } from './middleware/openapi-access';
+import { buildOpenApiYaml } from './openapi-document';
 import healthRouter from './routes/health';
 import itemsRouter from './routes/items';
 
 export function createApp() {
   const app = express();
+  app.set('trust proxy', 'loopback');
 
   app.use(
     helmet({
@@ -24,6 +27,10 @@ export function createApp() {
 
   app.use(healthRouter);
   app.use(itemsRouter);
+
+  app.get('/openapi.yaml', restrictOpenApiAccess(), (_req, res) => {
+    res.type('text/yaml').send(buildOpenApiYaml());
+  });
 
   app.use('/docs', apiReference({ content: buildOpenApiDocument() }));
 

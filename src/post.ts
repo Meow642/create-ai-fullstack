@@ -21,7 +21,7 @@ export async function runPostScaffold(options: ScaffoldOptions) {
   if (!options.install) console.log('  pnpm install');
   console.log('  pnpm dev');
   console.log('');
-  console.log('Open http://localhost:5173/items and http://localhost:3000/docs');
+  console.log('Open http://localhost:5173/items, http://localhost:3000/docs, and http://localhost:3000/openapi.yaml');
 }
 
 function run(command: string, args: string[], cwd: string) {

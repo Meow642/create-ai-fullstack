@@ -1,0 +1,21 @@
+services:
+  api:
+    image: node:22-bookworm-slim
+    working_dir: /workspace
+    ports:
+      - "3000:3000"
+    environment:
+      PORT: "3000"
+      DB_PATH: ./data.db
+      OPENAPI_ALLOWLIST: ""
+
+  web:
+    image: node:22-bookworm-slim
+    working_dir: /workspace
+    ports:
+      - "5173:5173"
+    environment:
+      VITE_API_BASE: http://localhost:3000
+      VITE_WS_BASE: ws://localhost:3000
+    depends_on:
+      - api

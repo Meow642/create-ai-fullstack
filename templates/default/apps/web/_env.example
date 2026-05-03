@@ -1,0 +1,5 @@
+# VITE_API_BASE: URL. HTTP API base URL used by Axios.
+VITE_API_BASE=http://localhost:3000
+
+# VITE_WS_BASE: URL. WebSocket base URL. Leave aligned with VITE_API_BASE unless API and WS split.
+VITE_WS_BASE=ws://localhost:3000

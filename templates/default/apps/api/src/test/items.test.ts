@@ -5,6 +5,10 @@ import { createApp } from '../app';
 const app = createApp();
 
 describe('items API', () => {
+  it('reports health', async () => {
+    await request(app).get('/health').expect(200, { ok: true });
+  });
+
   it('creates, lists, reads, updates, and deletes an item', async () => {
     const created = await request(app)
       .post('/items')
@@ -33,5 +37,15 @@ describe('items API', () => {
   it('returns 400 for invalid payloads', async () => {
     const response = await request(app).post('/items').send({ title: '' }).expect(400);
     expect(response.body.error).toContain('title');
+  });
+
+  it('returns 400 for invalid list query params', async () => {
+    const response = await request(app).get('/items').query({ limit: 0 }).expect(400);
+    expect(response.body.error).toContain('limit');
+  });
+
+  it('returns 404 when updating or deleting a missing item', async () => {
+    await request(app).patch('/items/999999').send({ title: 'Missing item' }).expect(404);
+    await request(app).delete('/items/999999').expect(404);
   });
 });

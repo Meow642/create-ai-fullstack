@@ -11,6 +11,7 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "lint": "eslint src --ext .ts",
     "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
     "gen:openapi": "tsx src/openapi.ts",
     "format": "prettier --write \"src/**/*.ts\""
   },
@@ -24,6 +25,7 @@
     "helmet": "^8.1.0",
     "morgan": "^1.10.1",
     "ws": "^8.20.0",
+    "yaml": "^2.8.2",
     "zod": "^4.3.6"
   },
   "devDependencies": {
@@ -35,6 +37,7 @@
     "@types/node": "^25.6.0",
     "@types/supertest": "^7.2.0",
     "@types/ws": "^8.18.1",
+    "@vitest/coverage-v8": "^4.1.5",
     "eslint": "^10.2.1",
     "eslint-config-prettier": "^10.1.8",
     "prettier": "^3.8.3",

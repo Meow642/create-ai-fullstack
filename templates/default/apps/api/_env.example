@@ -1,2 +1,9 @@
+# PORT: number. HTTP port for the Express API.
 PORT=3000
+
+# DB_PATH: string. SQLite database file path, relative to apps/api by default.
 DB_PATH=./data.db
+
+# OPENAPI_ALLOWLIST: comma-separated IPv4 addresses or CIDR ranges.
+# /openapi.yaml always allows localhost; add Pod IP ranges here when deployed.
+OPENAPI_ALLOWLIST=

@@ -1,0 +1,362 @@
+openapi: 3.1.0
+info:
+  title: create-ai-fullstack API
+  version: 0.1.0
+components:
+  schemas:
+    ApiError:
+      type: object
+      properties:
+        error:
+          type: string
+          description: 面向用户或调用方展示的错误信息。
+          example: Item 不存在
+      required:
+        - error
+    Item:
+      type: object
+      properties:
+        id:
+          type: integer
+          exclusiveMinimum: 0
+          description: Item 的唯一 ID。
+          example: 1
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+          description: Item 标题，长度为 1 到 200 个字符。
+          example: 第一个 item
+        createdAt:
+          type: string
+          description: 由 SQLite datetime() 生成的 UTC 时间字符串，格式为 YYYY-MM-DD HH:mm:ss。
+          example: 2026-04-27 00:00:00
+        updatedAt:
+          type: string
+          description: 由 SQLite datetime() 生成的 UTC 时间字符串，格式为 YYYY-MM-DD HH:mm:ss。
+          example: 2026-04-27 00:00:00
+      required:
+        - id
+        - title
+        - createdAt
+        - updatedAt
+      description: API 返回的演示 item。
+    CreateItemPayload:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+          description: Item 标题，长度为 1 到 200 个字符。
+          example: 第一个 item
+      required:
+        - title
+    UpdateItemPayload:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+          description: 新的 item 标题。省略该字段时保留当前标题。
+          example: 更新后的 item
+    ListItemsQuery:
+      type: object
+      properties:
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+          description: 本次最多返回的 item 数量。
+          example: 20
+        offset:
+          type:
+            - integer
+            - "null"
+          minimum: 0
+          default: 0
+          description: 分页偏移量，从 0 开始。
+          example: 0
+        q:
+          type: string
+          description: 可选的标题搜索关键词。
+          example: 第一
+    ItemIdParams:
+      type: object
+      properties:
+        id:
+          type: integer
+          exclusiveMinimum: 0
+          description: Item 的唯一 ID。
+          example: 1
+      required:
+        - id
+    PaginatedItems:
+      type: object
+      properties:
+        total:
+          type: integer
+          minimum: 0
+        limit:
+          type: integer
+          minimum: 1
+        offset:
+          type: integer
+          minimum: 0
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/Item"
+      required:
+        - total
+        - limit
+        - offset
+        - items
+  parameters: {}
+paths:
+  /items:
+    get:
+      summary: 查询 item 列表
+      description: 按创建时间倒序返回 item，支持分页和标题关键词搜索。
+      tags:
+        - Item 管理
+      parameters:
+        - schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+            description: 本次最多返回的 item 数量。
+            example: 20
+          required: false
+          description: 本次最多返回的 item 数量。
+          name: limit
+          in: query
+        - schema:
+            type:
+              - integer
+              - "null"
+            minimum: 0
+            default: 0
+            description: 分页偏移量，从 0 开始。
+            example: 0
+          required: false
+          description: 分页偏移量，从 0 开始。
+          name: offset
+          in: query
+        - schema:
+            type: string
+            description: 可选的标题搜索关键词。
+            example: 第一
+          required: false
+          description: 可选的标题搜索关键词。
+          name: q
+          in: query
+      responses:
+        "200":
+          description: item 列表
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total:
+                    type: integer
+                    minimum: 0
+                  limit:
+                    type: integer
+                    minimum: 1
+                  offset:
+                    type: integer
+                    minimum: 0
+                  items:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Item"
+                required:
+                  - total
+                  - limit
+                  - offset
+                  - items
+        "400":
+          description: 查询参数无效
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: 面向用户或调用方展示的错误信息。
+                    example: Item 不存在
+                required:
+                  - error
+    post:
+      summary: 创建 item
+      description: 创建一个新的 item，并通过 WebSocket 广播 item.created 通知。
+      tags:
+        - Item 管理
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  minLength: 1
+                  maxLength: 200
+                  description: Item 标题，长度为 1 到 200 个字符。
+                  example: 第一个 item
+              required:
+                - title
+      responses:
+        "201":
+          description: 创建成功的 item
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Item"
+        "400":
+          description: 请求体无效
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: 面向用户或调用方展示的错误信息。
+                    example: Item 不存在
+                required:
+                  - error
+  /items/{id}:
+    get:
+      summary: 查询 item
+      description: 根据 ID 返回单个 item。
+      tags:
+        - Item 管理
+      parameters:
+        - schema:
+            type: integer
+            exclusiveMinimum: 0
+            description: Item 的唯一 ID。
+            example: 1
+          required: true
+          description: Item 的唯一 ID。
+          name: id
+          in: path
+      responses:
+        "200":
+          description: item 详情
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Item"
+        "404":
+          description: Item 不存在
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: 面向用户或调用方展示的错误信息。
+                    example: Item 不存在
+                required:
+                  - error
+    patch:
+      summary: 更新 item
+      description: 更新现有 item 的标题。
+      tags:
+        - Item 管理
+      parameters:
+        - schema:
+            type: integer
+            exclusiveMinimum: 0
+            description: Item 的唯一 ID。
+            example: 1
+          required: true
+          description: Item 的唯一 ID。
+          name: id
+          in: path
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  minLength: 1
+                  maxLength: 200
+                  description: 新的 item 标题。省略该字段时保留当前标题。
+                  example: 更新后的 item
+      responses:
+        "200":
+          description: 更新后的 item
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Item"
+        "400":
+          description: 请求体无效
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: 面向用户或调用方展示的错误信息。
+                    example: Item 不存在
+                required:
+                  - error
+        "404":
+          description: Item 不存在
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: 面向用户或调用方展示的错误信息。
+                    example: Item 不存在
+                required:
+                  - error
+    delete:
+      summary: 删除 item
+      description: 根据 ID 删除现有 item。
+      tags:
+        - Item 管理
+      parameters:
+        - schema:
+            type: integer
+            exclusiveMinimum: 0
+            description: Item 的唯一 ID。
+            example: 1
+          required: true
+          description: Item 的唯一 ID。
+          name: id
+          in: path
+      responses:
+        "204":
+          description: 删除成功
+        "404":
+          description: Item 不存在
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: 面向用户或调用方展示的错误信息。
+                    example: Item 不存在
+                required:
+                  - error
+webhooks: {}

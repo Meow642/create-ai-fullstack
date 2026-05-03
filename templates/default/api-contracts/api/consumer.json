@@ -1,0 +1,19 @@
+{
+  "api": "api",
+  "version": "v0.1.0",
+  "provider": {
+    "name": "apps/api",
+    "type": "express-service",
+    "contractVersion": "v0.1.0",
+    "source": "packages/shared",
+    "owner": "fullstack-team"
+  },
+  "consumers": [
+    {
+      "name": "apps/web",
+      "type": "frontend",
+      "contractVersion": "v0.1.0",
+      "owner": "fullstack-team"
+    }
+  ]
+}

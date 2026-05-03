@@ -13,10 +13,14 @@
     "typecheck": "pnpm -r run typecheck",
     "lint": "pnpm -r run lint",
     "test": "pnpm -r run test",
+    "test:coverage": "pnpm -r --if-present run test:coverage",
     "gen:openapi": "pnpm -F api gen:openapi",
+    "validate:openapi": "swagger-cli validate api-contracts/api/openapi.yaml",
+    "verify:contracts": "pnpm gen:openapi && node scripts/check-contract-drift.mjs",
     "format": "prettier --write ."
   },
   "devDependencies": {
+    "@apidevtools/swagger-cli": "^4.0.4",
     "@eslint/js": "^10.0.1",
     "eslint": "^10.2.1",
     "eslint-config-prettier": "^10.1.8",

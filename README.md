@@ -2,7 +2,7 @@
 
 一键创建面向 AI 编码代理优化的 pnpm 全栈 monorepo 模板。
 
-生成的项目内置共享 Zod 契约、Express API、React 前端、OpenAPI 文档站，以及可端到端运行的 items CRUD + WebSocket 通知 demo。
+生成的项目内置共享 Zod 契约、Express API、React 前端、OpenAPI YAML 契约、OpenAPI 文档站，以及可端到端运行的 items CRUD + WebSocket 通知 demo。
 
 ## 快速开始
 
@@ -39,6 +39,9 @@ CAF_DEV_TMP=/tmp/my-caf-run pnpm dev:template
 - `apps/api`：Express 5、better-sqlite3、ws、Zod 校验、Scalar API 文档。
 - `apps/web`：Vite 8、React 19、Tailwind v4、shadcn/ui、TanStack Query。
 - `packages/shared`：共享 Zod schemas、推导类型、OpenAPI registry。
+- `api-contracts/api/openapi.yaml`：从共享 schema 自动生成并纳入版本控制的机器契约。
+- `prompts/`、`docs/contracts.md`、`docs/bdd-scenarios.md`：符合 AI 团队规范的 prompt 与契约文档入口。
+- `docker-compose*.yml`、`.github/workflows/ci.yml`：生成项目默认包含 Compose 与 CI 护栏。
 
 ## AI 工具兼容性
 
@@ -58,6 +61,7 @@ CAF_DEV_TMP=/tmp/my-caf-run pnpm dev:template
 
 - 前端页面：`http://localhost:5173/items`
 - API 文档：`http://localhost:3000/docs`
+- 机器契约：`http://localhost:3000/openapi.yaml`
 - 健康检查：`http://localhost:3000/health`
 
 ## CLI 参数

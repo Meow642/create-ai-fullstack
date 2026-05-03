@@ -1,0 +1,19 @@
+services:
+  api:
+    command: sh -lc "corepack enable && pnpm install --frozen-lockfile && pnpm -F api build && pnpm -F api start"
+    volumes:
+      - .:/workspace
+      - api-data:/data
+    environment:
+      DB_PATH: /data/data.db
+      NODE_ENV: production
+
+  web:
+    command: sh -lc "corepack enable && pnpm install --frozen-lockfile && pnpm -F web build && pnpm -F web preview --host 0.0.0.0"
+    volumes:
+      - .:/workspace
+    environment:
+      NODE_ENV: production
+
+volumes:
+  api-data:

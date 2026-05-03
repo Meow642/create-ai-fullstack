@@ -8,7 +8,7 @@ const tsconfigRootDir = path.dirname(fileURLToPath(import.meta.url));
 
 export default [
   {
-    ignores: ['node_modules/**', 'dist/**', 'coverage/**', 'docs/openapi.json'],
+    ignores: ['node_modules/**', 'dist/**', 'coverage/**'],
   },
   js.configs.recommended,
   ...tseslint.configs.recommended,

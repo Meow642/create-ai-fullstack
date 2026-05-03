@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.33.0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - run: pnpm install --frozen-lockfile=false
+      - run: pnpm typecheck
+      - run: pnpm lint
+      - run: pnpm test:coverage
+      - run: pnpm gen:openapi
+      - run: pnpm validate:openapi
+      - run: pnpm verify:contracts
+      - name: Check contract compatibility
+        run: |
+          if [ -f api-contracts/base/openapi.yaml ]; then
+            pnpm dlx oasdiff@latest break api-contracts/base/openapi.yaml api-contracts/api/openapi.yaml
+          else
+            echo "No base OpenAPI contract found; skipping oasdiff break for initial template projects."
+          fi
+      - run: pnpm build

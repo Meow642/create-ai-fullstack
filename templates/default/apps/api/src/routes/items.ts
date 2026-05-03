@@ -5,6 +5,7 @@ import {
   ItemIdParams,
   ListItemsQuery,
   UpdateItemPayload,
+  itemApiExpressPaths,
   type ItemDto as Item,
   type ListItemsQuery as ListQuery,
 } from '@workspace/shared';
@@ -49,7 +50,7 @@ function rowToItem(row: ItemRow): Item {
   return ItemDto.parse(row);
 }
 
-router.get('/items', validate({ query: ListItemsQuery }), (req, res) => {
+router.get(itemApiExpressPaths.list, validate({ query: ListItemsQuery }), (req, res) => {
   const { limit, offset, q } = ListItemsQuery.parse(req.query) as ListQuery;
   const pattern = `%${q ?? ''}%`;
   const items = (listItems.all(pattern, limit, offset) as ItemRow[]).map(rowToItem);
@@ -57,7 +58,7 @@ router.get('/items', validate({ query: ListItemsQuery }), (req, res) => {
   res.json({ total, limit, offset, items });
 });
 
-router.post('/items', validate({ body: CreateItemPayload }), (req, res) => {
+router.post(itemApiExpressPaths.create, validate({ body: CreateItemPayload }), (req, res) => {
   const payload = req.body as { title: string };
   const result = insertItem.run(payload.title);
   const item = rowToItem(getItem.get(result.lastInsertRowid) as ItemRow);
@@ -65,7 +66,7 @@ router.post('/items', validate({ body: CreateItemPayload }), (req, res) => {
   res.status(201).json(item);
 });
 
-router.get('/items/:id', validate({ params: ItemIdParams }), (req, res) => {
+router.get(itemApiExpressPaths.detail, validate({ params: ItemIdParams }), (req, res) => {
   const row = getItem.get(req.params.id) as ItemRow | undefined;
   if (!row) {
     res.status(404).json({ error: 'Item not found' });
@@ -75,7 +76,7 @@ router.get('/items/:id', validate({ params: ItemIdParams }), (req, res) => {
 });
 
 router.patch(
-  '/items/:id',
+  itemApiExpressPaths.update,
   validate({ params: ItemIdParams, body: UpdateItemPayload }),
   (req, res) => {
     const existing = getItem.get(req.params.id) as ItemRow | undefined;
@@ -89,7 +90,7 @@ router.patch(
   },
 );
 
-router.delete('/items/:id', validate({ params: ItemIdParams }), (req, res) => {
+router.delete(itemApiExpressPaths.delete, validate({ params: ItemIdParams }), (req, res) => {
   const result = deleteItem.run(req.params.id);
   if (result.changes === 0) {
     res.status(404).json({ error: 'Item not found' });
