@@ -1,9 +1,0 @@
-node_modules
-.claude
-dist
-*.db
-*.db-journal
-*.db-wal
-*.db-shm
-.env
-.DS_Store

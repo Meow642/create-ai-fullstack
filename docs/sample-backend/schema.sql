@@ -1,3 +1,0 @@
--- Database schema for VibeContest API.
--- Executed on startup by src/db.ts via db.exec().
--- Add CREATE TABLE IF NOT EXISTS ... statements here.
