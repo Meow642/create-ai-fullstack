@@ -7,14 +7,14 @@
 ## 变量
 
 - `{{feature_name}}`：功能名称。
-- `{{user_story}}`：用户可感知的目标。
+- `{{user_requirement}}`：用户需求与业务背景。
 - `{{acceptance_criteria}}`：必须满足的行为和测试要求。
 
 ## Prompt
 
-请为以下用户故事实现 `{{feature_name}}`：
+请根据以下用户需求实现 `{{feature_name}}`：
 
-`{{user_story}}`
+`{{user_requirement}}`
 
 验收标准：
 
