@@ -24,7 +24,7 @@ Node.js 后端：**Express 5 + TypeScript (CommonJS) + better-sqlite3 + ws + zod
 > 命令均通过根级 `pnpm -F api <script>` 调用，或在 `apps/api/` 目录里直接 `pnpm <script>`。
 
 - `pnpm dev` — `tsx watch --env-file-if-exists=.env src/index.ts`，热重载并在 `.env` 存在时自动加载（Node 原生支持，**不依赖 dotenv 包**）。
-- `pnpm build` — `tsc -p tsconfig.json` 编译到 `dist/`。
+- `pnpm build` — `tsc -p tsconfig.json && tsc-alias -p tsconfig.json`，编译到 `dist/` 并重写构建产物里的路径别名。
 - `pnpm start` — `node --env-file-if-exists=.env dist/apps/api/src/index.js`。
 - `pnpm gen:openapi` — 从 shared 包的 schema 注册表生成 `api-contracts/api/openapi.yaml`。
 - `pnpm test:coverage` — 执行 Vitest 覆盖率测试，阈值 80%。
@@ -44,8 +44,8 @@ Node.js 后端：**Express 5 + TypeScript (CommonJS) + better-sqlite3 + ws + zod
 - `src/index.ts` — 创建 HTTP server，挂载 Express 与 WebSocket，`server.listen(PORT)`。
 - `src/app.ts` — 构建 Express 应用并导出（不 listen，便于测试）。中间件顺序固定：`helmet({ contentSecurityPolicy: false }) → cors → morgan('dev') → express.json`，然后挂业务路由 → `/openapi.yaml` → `/docs` Scalar 站点 → 404 兜底 → 错误处理。**新路由要注册在 404 handler 之前。** CSP 关闭是为了避免 Scalar 文档页被浏览器拦成空白。
 - `src/db.ts` — 模块级单例。在 `DB_PATH` 打开 better-sqlite3，开启 `journal_mode=WAL` 和 `foreign_keys=ON`，从 `process.cwd()` 读取 `schema.sql` 并 `db.exec()` 执行。任何位置 `import { db } from './db'`，首次 import 触发初始化。
-- `src/middleware/validate.ts` — `validate({ body?, query?, params? })` 高阶中间件。校验失败统一返回 `400 { error: string }`，错误消息取自第一条 Zod issue 的 `path` + `message`。
-- `src/routes/*.ts` — 一个 feature 一个文件，每个文件默认导出一个 `Router`，在 `src/app.ts` 里注册。路由 path 必须从 `@workspace/shared` 的 `<module>/contracts.ts` 导出值引用，不要手写重复字符串。**路由处理函数从 `req.body / req.query / req.params` 取值时，类型由 `validate` 中间件覆写为 schema 的推导类型**（参见 `validate.ts` 内的类型实现）。
+- `src/middleware/validate.ts` — 提供 `validate({ body?, query?, params? })` 兼容型中间件，以及优先使用的 `validated(schemas, handler)` 路由包装器。校验失败统一返回 `400 { error: string }`，错误消息取自第一条 Zod issue 的 `path` + `message`。
+- `src/routes/*.ts` — 一个 feature 一个文件，每个文件默认导出一个 `Router`，在 `src/app.ts` 里注册。业务契约路由 path 必须从 `@workspace/shared` 的 `<module>/contracts.ts` 导出值引用，不要手写重复字符串；基础探活路由如 `/health` 可在本地定义。业务路由优先使用 `validated(schemas, handler)`，handler 内的 `req.body / req.query / req.params` 会按 Zod schema 推导类型，避免重复 parse 或手写 cast。
 - `src/ws/*.ts` — WebSocket 处理。`src/ws/index.ts` 导出 `attachWebSocket(server)`，在 `index.ts` 中调用。每个频道一个文件（如 `notifications.ts`），用一个简单的 `Set<WebSocket>` 维护客户端。广播由路由处理函数主动调用（如 `POST /items` 成功后调 `broadcastItemCreated(item)`）。
 - `src/openapi.ts` — 调用 shared OpenAPI 构建逻辑，写出 `api-contracts/api/openapi.yaml`。`pnpm gen:openapi` 即跑此脚本，禁止手写 YAML。
 - `schema.sql` — 建表 DDL 的唯一来源。**语句必须幂等**（`CREATE TABLE IF NOT EXISTS ...`），因为每次启动都会执行。没有迁移 runner；改已有表结构需要手动处理。
@@ -72,25 +72,25 @@ Node.js 后端：**Express 5 + TypeScript (CommonJS) + better-sqlite3 + ws + zod
 // apps/api/src/routes/items.ts
 import { Router } from 'express';
 import { CreateItemPayload, ListItemsQuery, ItemDto, itemApiExpressPaths } from '@workspace/shared';
-import { validate } from '../middleware/validate';
+import { validated } from '../middleware/validate';
 import { db } from '../db';
 import { broadcastItemCreated } from '../ws/notifications';
 
 const router = Router();
 
-router.get(itemApiExpressPaths.list, validate({ query: ListItemsQuery }), (req, res) => {
-  const { limit, offset, q } = req.query; // 已被 validate 覆写为推导类型
+router.get(itemApiExpressPaths.list, validated({ query: ListItemsQuery }, (req, res) => {
+  const { limit, offset, q } = req.query;
   // ... db.prepare(...).all(...)
   res.json({ total, limit, offset, items });
-});
+}));
 
-router.post(itemApiExpressPaths.create, validate({ body: CreateItemPayload }), (req, res) => {
+router.post(itemApiExpressPaths.create, validated({ body: CreateItemPayload }, (req, res) => {
   const { title } = req.body;
   // ... db.prepare(...).run(...)
   const item: ItemDto = /* ... */;
   broadcastItemCreated(item);
   res.status(201).json(item);
-});
+}));
 
 export default router;
 ```
@@ -98,8 +98,8 @@ export default router;
 ## 规范与坑点
 
 - `tsconfig`：`module: commonjs`、`strict: true`、`rootDir: ../..`、`outDir: dist`，并包含 `../../packages/shared/src`。
-- `package.json` 里是 `"type": "commonjs"` —— 不要在 `src/` 里写依赖 `.mjs` 解析的 ESM 风格 import。仓库根的 `eslint.config.mjs` 是唯一例外。
+- `package.json` 里是 `"type": "commonjs"`，源码可以正常使用 TypeScript `import/export`，但不要依赖 ESM-only 运行时语义或 `.mjs` 入口。仓库根的 `eslint.config.mjs` 是唯一例外。
 - **`better-sqlite3` 是同步 API**，绝对不要套 `async` / `await`。用 `db.prepare(sql).get() / .all() / .run()`，多语句原子操作用 `db.transaction(fn)`。
 - **不要**用 `import 'dotenv/config'` 或 `require('dotenv').config()`，统一靠 Node 的 `--env-file-if-exists=.env` 启动加载。
-- **不要**在路由里手写校验（`if (!req.body.title)`），一律走 `validate(schema)` 中间件。
+- **不要**在路由里手写校验（`if (!req.body.title)`），业务路由一律走 `validated(schemas, handler)`；只有需要拆成独立 middleware 时才用 `validate(schema)`。
 - **WebSocket 鉴权**：当前 demo 不带鉴权；如需接入，在 `server.on('upgrade')` 里读 `?token=` 并校验，校验失败直接 `socket.destroy()`。
