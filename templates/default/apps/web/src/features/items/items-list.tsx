@@ -1,12 +1,10 @@
 import { Search } from 'lucide-react';
 import { useMemo, useState } from 'react';
-import { toast } from 'sonner';
 import type { ItemDto } from '@workspace/shared';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { useItemEvents } from '@/hooks/use-item-events';
-import { ApiError } from '@/lib/api';
 import { useCreateItem, useDeleteItem, useItemsQuery, useUpdateItem } from './api';
 import { ItemsFormDialog } from './items-form-dialog';
 import { ItemsTable } from './items-table';
@@ -38,16 +36,16 @@ export function ItemsListPage() {
       }
       setDialogOpen(false);
       setEditingItem(undefined);
-    } catch (error) {
-      toast.error(error instanceof ApiError ? error.message : '保存失败');
+    } catch {
+      // The API interceptor already shows the error toast.
     }
   };
 
   const removeItem = async (id: number) => {
     try {
       await deleteItem.mutateAsync(id);
-    } catch (error) {
-      toast.error(error instanceof ApiError ? error.message : '删除失败');
+    } catch {
+      // The API interceptor already shows the error toast.
     }
   };
 

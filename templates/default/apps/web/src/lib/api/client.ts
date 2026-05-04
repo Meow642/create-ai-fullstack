@@ -1,4 +1,5 @@
 import axios, { type AxiosError, type AxiosRequestConfig } from 'axios';
+import { toast } from 'sonner';
 import { ApiError } from './types';
 
 type ErrorBody = { error?: string };
@@ -14,6 +15,9 @@ api.interceptors.response.use(
   (error: AxiosError<ErrorBody>) => {
     const status = error.response?.status;
     const message = error.response?.data?.error ?? error.message ?? 'Network error';
+    if (error.code !== 'ERR_CANCELED') {
+      toast.error(message);
+    }
     return Promise.reject(new ApiError(message, status, error));
   },
 );

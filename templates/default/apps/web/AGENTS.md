@@ -30,7 +30,7 @@
 
 ## 架构
 
-- **入口**：[src/main.tsx](src/main.tsx) 在全局 `QueryClientProvider` + `TooltipProvider` + `RouterProvider` 内挂载，并渲染全局 `<Toaster />`（sonner）。新增全局 Provider（主题等）放这里，不要塞进 `App`。
+- **入口**：[src/main.tsx](src/main.tsx) 在全局 `ThemeProvider` + `QueryClientProvider` + `TooltipProvider` + `RouterProvider` 内挂载，并渲染全局 `<Toaster />`（sonner）。新增全局 Provider 放这里，不要塞进 `App`。
 - **路径别名**：`@/*` → `src/*`，在 [vite.config.ts](vite.config.ts) 和 [tsconfig.app.json](tsconfig.app.json) 都配了。**一律用 `@/…`，不要相对路径。** 跨包导入 shared 用 `@workspace/shared`。
 - **样式**：Tailwind CSS v4，通过 `@tailwindcss/vite` 接入（**没有 `tailwind.config.js`**，配置写在 CSS 里）。全局 token、`shadcn/tailwind.css` 引入、`dark` 自定义 variant、`@theme inline` CSS 变量绑定都集中在 [src/index.css](src/index.css)。新增设计 token 请扩展那个 `@theme` 块，**不要**另建 Tailwind 配置文件。
 - **UI 组件**：shadcn 组件位于 [src/components/ui](src/components/ui/)，配置见 [components.json](components.json)（`style: radix-nova`、`baseColor: neutral`、图标库 `lucide`）。**shadcn/ui 的所有组件已经装好**，直接 `import` 使用即可，不需要再跑 shadcn CLI 添加。
@@ -44,12 +44,12 @@
 
 - [src/lib/api/client.ts](src/lib/api/client.ts) —
   - `api`：axios 实例（`baseURL` 来自 `VITE_API_BASE`，默认 `http://localhost:3000`；10s 超时；默认 `Content-Type: application/json`）。
-  - 响应拦截器统一归一化错误为 `ApiError`；401/403/500/网络错误有默认 toast/占位处理。
-  - `http.{get,post,put,patch,delete}` —— 在 axios 之上的薄封装，自动解包 `res.data`，并把 `204 No Content` 转成 `null`。**业务层优先用 `http.*` 而不是直接 `api.*`**。
-- [src/lib/api/types.ts](src/lib/api/types.ts) — `Paginated<T>`（`{ total, limit, offset, items }`）、`ApiErrorBody`（`{ error: string }`）、`ApiError` 类（含 `status` / `raw`，业务层可 `instanceof` 判别）。`Paginated` 与 `ApiErrorBody` 的 schema 实际来自 `@workspace/shared`，此文件做 re-export 与本地类。
+  - 响应拦截器统一解包 `res.data`，把 `204 No Content` 转成 `null`，并把失败响应归一化为 `ApiError`；非取消请求的错误会统一 `toast.error(message)`。
+  - `http.{get,post,patch,delete}` —— 在 axios 之上的薄封装。**业务层优先用 `http.*` 而不是直接 `api.*`**。
+- [src/lib/api/types.ts](src/lib/api/types.ts) — 从 `@workspace/shared` re-export `Paginated<T>`、item DTO / payload / query 类型，并在本地定义 `ApiError` 类（含 `status` / `raw`，业务层可 `instanceof` 判别）。
 - [src/lib/api/query-client.ts](src/lib/api/query-client.ts) — 全局 `queryClient`：`staleTime 30s`、关 `refetchOnWindowFocus`、4xx 不重试、mutation 不重试。
 - [src/lib/api/time.ts](src/lib/api/time.ts) — `parseServerTime(s)`：把后端 `YYYY-MM-DD HH:mm:ss`（UTC、空格分隔，**非 ISO 8601**）转成 `Date`。
-- [src/lib/api/ws.ts](src/lib/api/ws.ts) — `useWebSocket(path, { onMessage })` hook，自动重连、心跳。
+- [src/lib/api/ws.ts](src/lib/api/ws.ts) — `useWebSocket(path, { onMessage })` hook，断线后指数退避重连；收到消息时先尝试 `JSON.parse`，失败则把原始字符串传给 `onMessage`。
 - [src/lib/api/index.ts](src/lib/api/index.ts) — 桶导出，业务层统一 `from "@/lib/api"`。
 
 后端约定：
@@ -86,7 +86,7 @@ try {
 }
 ```
 
-> 拦截器已处理通用错误 toast，业务层**不要**再对 401/403/500/网络错误重复弹提示，只处理业务相关分支（比如 400/404）。
+> 拦截器已处理通用错误 toast，业务层**不要**再重复弹同一条错误。业务层只处理额外的状态恢复、弹窗关闭、特殊 400/404 分支，或需要覆盖默认提示文案的场景。
 
 ### 表单示例（react-hook-form + zod）
 
