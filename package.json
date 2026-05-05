@@ -1,6 +1,6 @@
 {
   "name": "create-ai-fullstack",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Create an AI-friendly fullstack pnpm monorepo template.",
   "type": "module",
   "bin": {
