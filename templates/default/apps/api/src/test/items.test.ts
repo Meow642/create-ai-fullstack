@@ -44,6 +44,20 @@ describe('items API', () => {
     expect(response.body.error).toContain('limit');
   });
 
+  it('returns 404 for unknown routes', async () => {
+    await request(app).get('/missing-route').expect(404, { error: 'Not found' });
+  });
+
+  it('returns 500 for malformed JSON bodies', async () => {
+    const response = await request(app)
+      .post('/items')
+      .set('Content-Type', 'application/json')
+      .send('{')
+      .expect(500);
+
+    expect(response.body.error).toContain('JSON');
+  });
+
   it('returns 404 when updating or deleting a missing item', async () => {
     await request(app).patch('/items/999999').send({ title: 'Missing item' }).expect(404);
     await request(app).delete('/items/999999').expect(404);

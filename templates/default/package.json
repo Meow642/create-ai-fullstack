@@ -5,7 +5,7 @@
   "type": "module",
   "packageManager": "pnpm@10.33.0",
   "engines": {
-    "node": ">=22.0.0"
+    "node": ">=22.12.0"
   },
   "scripts": {
     "dev": "node scripts/dev.mjs",
@@ -15,12 +15,12 @@
     "test": "pnpm -r run test",
     "test:coverage": "pnpm -r --if-present run test:coverage",
     "gen:openapi": "pnpm -F api gen:openapi",
-    "validate:openapi": "swagger-cli validate api-contracts/api/openapi.yaml",
+    "validate:openapi": "redocly lint api-contracts/api/openapi.yaml --extends=minimal --skip-rule=no-empty-servers --skip-rule=operation-operationId --skip-rule=no-unused-components --skip-rule=security-defined",
     "verify:contracts": "pnpm gen:openapi && node scripts/check-contract-drift.mjs",
     "format": "prettier --write ."
   },
   "devDependencies": {
-    "@apidevtools/swagger-cli": "^4.0.4",
+    "@redocly/cli": "^2.30.3",
     "@eslint/js": "^10.0.1",
     "eslint": "^10.2.1",
     "eslint-config-prettier": "^10.1.8",
@@ -32,6 +32,15 @@
     "onlyBuiltDependencies": [
       "better-sqlite3",
       "esbuild"
-    ]
+    ],
+    "ignoredBuiltDependencies": [
+      "core-js",
+      "msw",
+      "protobufjs"
+    ],
+    "allowedDeprecatedVersions": {
+      "node-domexception": "1.0.0",
+      "prebuild-install": "7.1.3"
+    }
   }
 }

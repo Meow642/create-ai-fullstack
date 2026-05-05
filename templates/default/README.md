@@ -13,7 +13,7 @@
 - **Vitest**：前后端测试框架。
 - **GitHub Actions**：默认 CI 执行类型、lint、覆盖率、契约和构建校验。
 - **Docker Compose**：提供开发与生产 compose 配置。
-- **Node.js >= 22**：使用现代 Node 能力，包括 `--env-file-if-exists`。
+- **Node.js >= 22.12**：使用现代 Node 能力，包括 `--env-file-if-exists`。
 
 ### 前端 `apps/web`
 

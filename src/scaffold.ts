@@ -7,6 +7,13 @@ import { renamePlaceholderFile } from './utils/rename.js';
 
 const templateDir = fileURLToPath(new URL('../templates/default', import.meta.url));
 
+const ignoredTemplateDirectories = new Set([
+  'node_modules',
+  '.pnpm-store',
+  'dist',
+  'coverage',
+]);
+
 const replacementFiles = [
   'package.json',
   'AGENTS.md',
@@ -17,10 +24,22 @@ const replacementFiles = [
 export async function scaffoldProject(options: ScaffoldOptions) {
   await assertTargetDirectoryAvailable(options.targetDir);
   await mkdir(options.targetDir, { recursive: true });
-  await cp(templateDir, options.targetDir, { recursive: true });
+  await cp(templateDir, options.targetDir, {
+    recursive: true,
+    filter: shouldCopyTemplateEntry,
+  });
   await renamePlaceholders(options.targetDir);
   await replaceProjectName(options);
   await writeGitAttributes(options.targetDir);
+}
+
+function shouldCopyTemplateEntry(sourcePath: string) {
+  const relativePath = path.relative(templateDir, sourcePath);
+  if (!relativePath) return true;
+
+  return !relativePath
+    .split(path.sep)
+    .some((segment) => ignoredTemplateDirectories.has(segment));
 }
 
 async function renamePlaceholders(dir: string) {

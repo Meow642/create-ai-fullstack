@@ -30,7 +30,7 @@ if (packageJson.private === true) {
 }
 
 const tag = getPublishTag(packageJson.version);
-const checks = ["lint", "test", "typecheck", "build"];
+const checks = ["lint", "test", "typecheck", "verify"];
 const publishEnv = {
   ...process.env,
   npm_config_cache: process.env.npm_config_cache ?? join(tmpdir(), `${packageJson.name}-npm-cache`),

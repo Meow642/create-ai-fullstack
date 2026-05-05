@@ -67,7 +67,7 @@ API 契约由两类源码生成，**单一事实源都在 `packages/shared`**：
 
 ## 常用命令（根级）
 
-> 本项目用 **pnpm workspaces**，要求 `pnpm >= 10.33.0` 与 `Node >= 22`。
+> 本项目用 **pnpm workspaces**，要求 `pnpm >= 10.33.0` 与 `Node >= 22.12`。
 
 | 命令 | 作用 |
 |---|---|
