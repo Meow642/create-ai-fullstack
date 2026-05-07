@@ -25,7 +25,8 @@
     "test": "node --test \"test/**/*.test.mjs\"",
     "verify": "pnpm build && bash scripts/verify-template.sh",
     "release": "node scripts/publish.mjs",
-    "release:dry-run": "node scripts/publish.mjs --dry-run"
+    "release:dry-run": "node scripts/publish.mjs --dry-run",
+    "release:bump": "bash scripts/bump-release.sh"
   },
   "dependencies": {
     "@clack/prompts": "^1.2.0",
