@@ -14,7 +14,7 @@ trap cleanup EXIT
 
 rm -rf /tmp/cf-smoke
 mkdir -p /tmp/cf-smoke
-node "$(pwd)/dist/index.mjs" /tmp/cf-smoke/app --no-install --no-git
+node "$(pwd)/dist/index.mjs" /tmp/cf-smoke/app --no-install --no-git --db sql-js
 cd /tmp/cf-smoke/app
 pnpm install
 pnpm typecheck

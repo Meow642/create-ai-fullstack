@@ -8,67 +8,38 @@ import {
   itemApiExpressPaths,
   type ItemDto as Item,
 } from '@workspace/shared';
-import { db } from '../db';
+import {
+  createItem,
+  deleteItem,
+  getItem,
+  listItemsPage,
+  updateItem,
+  type ItemRecord,
+} from '../db';
 import { validated } from '../middleware/validate';
 import { broadcastItemCreated } from '../ws/notifications';
 
-type ItemRow = {
-  id: number;
-  title: string;
-  createdAt: string;
-  updatedAt: string;
-};
-
 const router = Router();
 
-const listItems = db.prepare(`
-  SELECT id, title, createdAt, updatedAt
-  FROM items
-  WHERE title LIKE ?
-  ORDER BY createdAt DESC, id DESC
-  LIMIT ? OFFSET ?
-`);
-
-const countItems = db.prepare(`
-  SELECT COUNT(*) as total
-  FROM items
-  WHERE title LIKE ?
-`);
-
-const getItem = db.prepare(
-  'SELECT id, title, createdAt, updatedAt FROM items WHERE id = ?',
-);
-const insertItem = db.prepare('INSERT INTO items (title) VALUES (?)');
-const updateItem = db.prepare(`
-  UPDATE items
-  SET title = COALESCE(?, title),
-      updatedAt = datetime('now')
-  WHERE id = ?
-`);
-const deleteItem = db.prepare('DELETE FROM items WHERE id = ?');
-
-function rowToItem(row: ItemRow): Item {
-  return ItemDto.parse(row);
+function recordToItem(record: ItemRecord): Item {
+  return ItemDto.parse(record);
 }
 
 router.get(
   itemApiExpressPaths.list,
-  validated({ query: ListItemsQuery }, (req, res) => {
+  validated({ query: ListItemsQuery }, async (req, res) => {
     const { limit, offset, q } = req.query;
-    const pattern = `%${q ?? ''}%`;
-    const items = (listItems.all(pattern, limit, offset) as ItemRow[]).map(
-      rowToItem,
-    );
-    const total = (countItems.get(pattern) as { total: number }).total;
+    const page = await listItemsPage({ limit, offset, q });
+    const items = page.items.map(recordToItem);
+    const total = page.total;
     res.json({ total, limit, offset, items });
   }),
 );
 
 router.post(
   itemApiExpressPaths.create,
-  validated({ body: CreateItemPayload }, (req, res) => {
-    const result = insertItem.run(req.body.title);
-    const item = rowToItem(getItem.get(result.lastInsertRowid) as ItemRow);
+  validated({ body: CreateItemPayload }, async (req, res) => {
+    const item = recordToItem(await createItem(req.body.title));
     broadcastItemCreated(item);
     res.status(201).json(item);
   }),
@@ -76,34 +47,32 @@ router.post(
 
 router.get(
   itemApiExpressPaths.detail,
-  validated({ params: ItemIdParams }, (req, res) => {
-    const row = getItem.get(req.params.id) as ItemRow | undefined;
-    if (!row) {
+  validated({ params: ItemIdParams }, async (req, res) => {
+    const item = await getItem(req.params.id);
+    if (!item) {
       res.status(404).json({ error: 'Item not found' });
       return;
     }
-    res.json(rowToItem(row));
+    res.json(recordToItem(item));
   }),
 );
 
 router.patch(
   itemApiExpressPaths.update,
-  validated({ params: ItemIdParams, body: UpdateItemPayload }, (req, res) => {
-    const existing = getItem.get(req.params.id) as ItemRow | undefined;
-    if (!existing) {
+  validated({ params: ItemIdParams, body: UpdateItemPayload }, async (req, res) => {
+    const item = await updateItem(req.params.id, { title: req.body.title });
+    if (!item) {
       res.status(404).json({ error: 'Item not found' });
       return;
     }
-    updateItem.run(req.body.title ?? null, req.params.id);
-    res.json(rowToItem(getItem.get(req.params.id) as ItemRow));
+    res.json(recordToItem(item));
   }),
 );
 
 router.delete(
   itemApiExpressPaths.delete,
-  validated({ params: ItemIdParams }, (req, res) => {
-    const result = deleteItem.run(req.params.id);
-    if (result.changes === 0) {
+  validated({ params: ItemIdParams }, async (req, res) => {
+    if (!(await deleteItem(req.params.id))) {
       res.status(404).json({ error: 'Item not found' });
       return;
     }

@@ -36,7 +36,7 @@ CAF_DEV_TMP=/tmp/my-caf-run pnpm dev:template
 
 ## 生成内容
 
-- `apps/api`：Express 5、better-sqlite3、ws、Zod 校验、Scalar API 文档。
+- `apps/api`：Express 5、SQLite（可选 better-sqlite3 或 sql.js）、ws、Zod 校验、Scalar API 文档。
 - `apps/web`：Vite 8、React 19、Tailwind v4、shadcn/ui、TanStack Query。
 - `packages/shared`：共享 Zod schemas、推导类型、OpenAPI registry。
 - `api-contracts/api/openapi.yaml`：从共享 schema 自动生成并纳入版本控制的机器契约。
@@ -67,12 +67,13 @@ CAF_DEV_TMP=/tmp/my-caf-run pnpm dev:template
 ## CLI 参数
 
 ```bash
-create-ai-fullstack [dir] [--no-install] [--no-git]
+create-ai-fullstack [dir] [--no-install] [--no-git] [--db better-sqlite3|sql-js]
 ```
 
 - `[dir]`：目标项目目录。传入时项目名默认使用目录名。
 - `--no-install`：只生成文件，不自动执行 `pnpm install`。
 - `--no-git`：不初始化 git 仓库。
+- `--db`：跳过交互式数据库驱动选择。默认 `sql-js`，不需要本机编译，Windows 和本地 demo 更稳；`better-sqlite3` 更快、适合服务端部署。
 
 ## 环境要求
 

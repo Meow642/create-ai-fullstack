@@ -23,7 +23,7 @@
 .
 ├── apps/
 │   ├── web/              # 前端：Vite 8 + React 19 + TS + Tailwind v4 + shadcn/ui + TanStack Query
-│   └── api/              # 后端：Express 5 + TS (CJS) + better-sqlite3 + ws + zod
+│   └── api/              # 后端：Express 5 + TS (CJS) + SQLite ({{DATABASE_DRIVER_NAME}}) + ws + zod
 ├── packages/
 │   └── shared/           # 共享 Zod schemas、推导类型、OpenAPI registry、通用工具
 ├── docs/

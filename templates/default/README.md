@@ -38,7 +38,7 @@
 - **@asteasolutions/zod-to-openapi**：从共享 Zod schema 生成 OpenAPI 文档。
 - **Scalar API Reference**：在 `/docs` 提供交互式 API 文档。
 - **YAML OpenAPI 契约**：在 `api-contracts/api/openapi.yaml` 版本化，并通过 `/openapi.yaml` 受限暴露。
-- **better-sqlite3**：本地 SQLite 数据库。
+- **{{DATABASE_DRIVER_NAME}}**：{{DATABASE_DRIVER_DESCRIPTION}}
 - **ws**：WebSocket 实时通知。
 - **Helmet / CORS / Morgan**：安全头、跨域与请求日志。
 - **tsx**：开发环境直接运行 TypeScript。
@@ -113,7 +113,7 @@ docker compose -f docker-compose.yml -f docker-compose.prod.yml up --build
 - 前端通过 TanStack Query 调用 `/items` API，支持列表、详情、新增、编辑与删除。
 - 后端使用 Express 路由实现 `GET /items`、`POST /items`、`GET /items/:id`、`PATCH /items/:id`、`DELETE /items/:id`。
 - 请求参数和请求体通过共享 Zod schema 校验。
-- 数据存储在本地 SQLite 数据库中，默认数据库文件为 `apps/api/data.db`。
+- 数据存储在本地 SQLite 数据库中，默认数据库文件为 `apps/api/data.db`。当前数据库驱动为 `{{DATABASE_DRIVER_NAME}}`，{{DATABASE_DRIVER_NOTE}}。
 - 新增 item 后，后端通过 WebSocket 广播实时事件，前端可订阅并刷新相关数据。
 - API 文档由共享契约生成，开发时可直接打开 `/docs` 调试接口。
 

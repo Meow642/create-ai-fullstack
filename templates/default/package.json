@@ -30,7 +30,6 @@
   },
   "pnpm": {
     "onlyBuiltDependencies": [
-      "better-sqlite3",
       "esbuild"
     ],
     "ignoredBuiltDependencies": [
@@ -39,8 +38,7 @@
       "protobufjs"
     ],
     "allowedDeprecatedVersions": {
-      "node-domexception": "1.0.0",
-      "prebuild-install": "7.1.3"
+      "node-domexception": "1.0.0"
     }
   }
 }

@@ -14,7 +14,7 @@ rm -rf "$TMP_ROOT"
 mkdir -p "$TMP_ROOT"
 
 echo "Scaffolding template project..."
-node "$ROOT_DIR/dist/index.mjs" "$APP_DIR" --no-install --no-git
+node "$ROOT_DIR/dist/index.mjs" "$APP_DIR" --no-install --no-git --db sql-js
 
 echo "Installing generated project dependencies..."
 cd "$APP_DIR"

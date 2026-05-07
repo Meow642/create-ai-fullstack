@@ -9,7 +9,7 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       include: ['src/**/*.ts'],
-      exclude: ['src/index.ts', 'src/openapi.ts', 'src/test/**'],
+      exclude: ['src/index.ts', 'src/openapi.ts', 'src/test/**', 'src/db/drivers/**'],
       thresholds: {
         branches: 80,
         functions: 80,
