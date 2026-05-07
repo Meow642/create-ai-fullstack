@@ -42,12 +42,12 @@ for (const script of checks) {
   await run("pnpm", [script]);
 }
 
-await run("pnpm", ["publish", "--dry-run", "--tag", tag, ...publishArgs], { env: publishEnv });
-
 if (dryRunOnly) {
+  await run("npm", ["pack", "--dry-run"], { env: publishEnv });
   log("Dry run completed. Skipping real publish.");
 } else {
-  await run("pnpm", ["publish", "--tag", tag, ...publishArgs], { env: publishEnv });
+  await run("npm", ["publish", "--dry-run", "--tag", tag, ...publishArgs], { env: publishEnv });
+  await run("npm", ["publish", "--tag", tag, ...publishArgs], { env: publishEnv });
 }
 
 function getPublishTag(version) {
