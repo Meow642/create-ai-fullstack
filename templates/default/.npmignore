@@ -1,0 +1,14 @@
+node_modules
+.pnpm-store
+dist
+.next
+.turbo
+.tmp
+.vite
+coverage
+*.tsbuildinfo
+.env
+*.db
+*.db-shm
+*.db-wal
+.DS_Store

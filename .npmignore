@@ -6,4 +6,12 @@ tsup.config.ts
 eslint.config.mjs
 pnpm-lock.yaml
 node_modules
+**/node_modules
+templates/**/node_modules
+templates/**/.next
+templates/**/dist
+templates/**/.turbo
+templates/**/.tmp
+templates/**/*.tsbuildinfo
 .DS_Store
+**/.DS_Store
